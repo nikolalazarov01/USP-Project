@@ -1,7 +1,12 @@
+using USP_Project.Data.Extensions;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+var configuration = builder.Configuration.GetSection("Database")["ConnectionString"];
+builder.Services.SetupDatabase(configuration);
 builder.Services.AddControllersWithViews();
+
 
 var app = builder.Build();
 
