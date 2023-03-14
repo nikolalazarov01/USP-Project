@@ -1,4 +1,7 @@
+using Microsoft.AspNetCore.Identity.UI.Services;
 using USP_Project.Data.Extensions;
+using USP_Project.Web;
+using USP_Project.Web.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,7 +10,11 @@ var connectionString = builder.Configuration.GetSection("Database")["ConnectionS
 
 builder.Services
     .AddData(connectionString)
+    .AddApplicationAuthentication(builder.Configuration)
+    .AddScoped<IEmailSender, NullMailSender>()
     .AddControllersWithViews();
+
+builder.Services.AddRazorPages();
 
 var app = builder.Build();
 
@@ -27,5 +34,6 @@ app.UseHttpsRedirection()
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+app.MapRazorPages();
 
 app.Run();

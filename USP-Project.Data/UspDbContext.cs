@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace USP_Project.Data;
 
-public class UspDbContext : IdentityDbContext<IdentityUser>
+public class UspDbContext : IdentityDbContext<IdentityUser, IdentityRole, string>
 {
     public UspDbContext(DbContextOptions<UspDbContext> options)
         : base(options)
