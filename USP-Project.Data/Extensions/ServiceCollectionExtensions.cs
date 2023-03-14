@@ -7,12 +7,12 @@ namespace USP_Project.Data.Extensions;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddInfrastructure(
+    public static IServiceCollection AddData(
         this IServiceCollection services,
         string connectionString)
     {
         services
-            .AddScoped<UspDbContext>()
+            // .AddScoped<UspDbContext>()
             .AddDbContext<UspDbContext>((sp, options) =>
                 options
                     .UseMemoryCache(sp.GetRequiredService<IMemoryCache>())
