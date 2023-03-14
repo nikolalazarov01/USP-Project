@@ -3,27 +3,25 @@ using USP_Project.Data.Extensions;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-var configuration = builder.Configuration.GetSection("Database")["ConnectionString"];
-builder.Services.SetupDatabase(configuration);
-builder.Services.AddControllersWithViews();
+var connectionString = builder.Configuration.GetSection("Database")["ConnectionString"];
 
+builder.Services
+    .AddInfrastructure(connectionString)
+    .AddControllersWithViews();
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
+    app.UseExceptionHandler("/Home/Error")
+        .UseHsts();
 }
 
-app.UseHttpsRedirection();
-app.UseStaticFiles();
-
-app.UseRouting();
-
-app.UseAuthorization();
+app.UseHttpsRedirection()
+    .UseStaticFiles()
+    .UseRouting()
+    .UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
