@@ -6,7 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetSection("Database")["ConnectionString"];
 
 builder.Services
-    .AddInfrastructure(connectionString)
+    .AddData(connectionString)
     .AddControllersWithViews();
 
 var app = builder.Build();
@@ -21,6 +21,7 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection()
     .UseStaticFiles()
     .UseRouting()
+    .UseAuthentication()
     .UseAuthorization();
 
 app.MapControllerRoute(
