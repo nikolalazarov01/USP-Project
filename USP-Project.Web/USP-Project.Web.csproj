@@ -8,6 +8,8 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="6.0.14" />
+      <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="6.0.14" />
       <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.14" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.14" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.0">
@@ -19,6 +21,18 @@
 
     <ItemGroup>
       <ProjectReference Include="..\USP-Project.Data\USP-Project.Data.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Areas\Identity\Pages\Account\ExternalLogin.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Identity\Pages\Account\Login.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Identity\Pages\Account\Manage\_ManageNav.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Identity\Pages\Account\Manage\_ViewImports.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Identity\Pages\Account\Register.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Identity\Pages\Account\_ViewImports.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Identity\Pages\_ValidationScriptsPartial.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Identity\Pages\_ViewImports.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Identity\Pages\_ViewStart.cshtml" />
     </ItemGroup>
 
 </Project>
