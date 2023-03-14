@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using USP_Project.Data;
@@ -11,9 +12,10 @@ using USP_Project.Data;
 namespace USP_Project.Data.Migrations
 {
     [DbContext(typeof(UspDbContext))]
-    partial class UspDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230314080820_AddingIdentitySupportForDbContext")]
+    partial class AddingIdentitySupportForDbContext
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
