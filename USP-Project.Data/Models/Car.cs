@@ -19,4 +19,5 @@ public class Car
     public Model Model { get; set; }
 
     public ICollection<Extra>? Extras { get; set; }
+    public List<CarsExtras> CarsExtras { get; set; }
 }

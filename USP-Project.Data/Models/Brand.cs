@@ -12,5 +12,5 @@ public class Brand
     
     public string? Description { get; set; } 
     
-    public ICollection<Car> Cars { get; set; }
+    public ICollection<Car>? Cars { get; set; }
 }
