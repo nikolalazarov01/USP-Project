@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity.UI.Services;
 using USP_Project.Data.Extensions;
 using USP_Project.Web;
+using USP_Project.Web.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,20 +9,8 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetSection("Database")["ConnectionString"];
 
 builder.Services
-    .AddAuthentication()
-    .AddGoogle(options =>
-    {
-        options.ClientId = builder.Configuration.GetSection("Google")[nameof(options.ClientId)];
-        options.ClientSecret = builder.Configuration.GetSection("Google")[nameof(options.ClientSecret)];
-    })
-    .AddFacebook(options =>
-    {
-        options.AppId = builder.Configuration.GetSection("Facebook")[nameof(options.AppId)];
-        options.AppSecret = builder.Configuration.GetSection("Facebook")[nameof(options.AppSecret)];
-    });
-    
-builder.Services
     .AddData(connectionString)
+    .AddApplicationAuthentication(builder.Configuration)
     .AddScoped<IEmailSender, NullMailSender>()
     .AddControllersWithViews();
 

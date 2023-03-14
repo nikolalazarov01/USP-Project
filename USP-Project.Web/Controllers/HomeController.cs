@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using USP_Project.Web.Models;
 
@@ -22,6 +23,15 @@ public class HomeController : Controller
     {
         return View();
     }
+
+    [HttpGet]
+    [Authorize]
+    public IActionResult Secret()
+    {
+        var user = HttpContext.User;
+        return Ok("This is a secret endpoint!");
+    }
+    
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
