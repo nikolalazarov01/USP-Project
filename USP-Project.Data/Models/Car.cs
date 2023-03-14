@@ -18,5 +18,5 @@ public class Car
     public Guid ModelId { get; set; }
     public Model Model { get; set; }
 
-    private ICollection<Extra>? Extras { get; set; }
+    public ICollection<Extra>? Extras { get; set; }
 }
