@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "USP-Project.Web", "USP-Proj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "USP-Project.Data", "USP-Project.Data\USP-Project.Data.csproj", "{CADF8AE2-A53D-4DCF-9293-40644E476829}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Usp-Project.Utils", "Usp-Project.Utils\Usp-Project.Utils.csproj", "{F9BEE8AE-4A14-4499-8B71-DA4FEFDF3910}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{CADF8AE2-A53D-4DCF-9293-40644E476829}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CADF8AE2-A53D-4DCF-9293-40644E476829}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CADF8AE2-A53D-4DCF-9293-40644E476829}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F9BEE8AE-4A14-4499-8B71-DA4FEFDF3910}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9BEE8AE-4A14-4499-8B71-DA4FEFDF3910}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F9BEE8AE-4A14-4499-8B71-DA4FEFDF3910}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F9BEE8AE-4A14-4499-8B71-DA4FEFDF3910}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
