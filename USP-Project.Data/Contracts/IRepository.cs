@@ -12,4 +12,5 @@ public interface IRepository<T> where T : class, IEntity
     Task<OperationResult<IEnumerable<T>>> GetManyAsync(IEnumerable<Expression<Func<T, bool>>> filters,
         IEnumerable<Func<IQueryable<T>, IQueryable<T>>> transformations, CancellationToken token);
     Task<OperationResult> UpdateAsync(T entity, CancellationToken token);
+    Task<OperationResult> DeleteAsync(T entity, CancellationToken token);
 }
