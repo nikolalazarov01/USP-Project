@@ -68,4 +68,21 @@ public class Repository<T> : IRepository<T> where T : class
 
         return operationResult;
     }
+
+    public async Task<OperationResult<IEnumerable<T>>> GetManyAsync(IEnumerable<Expression<Func<T, bool>>> filters, IEnumerable<Func<IQueryable<T>, IQueryable<T>>> transformations, CancellationToken token)
+    {
+        var operationResult = new OperationResult<IEnumerable<T>>();
+
+        try
+        {
+            var result = await this._db.Set<T>().Filter(filters).Transform(transformations).ToListAsync(token);
+            operationResult.Data = result;
+        }
+        catch (Exception ex)
+        {
+            operationResult.AppendError(ex);
+        }
+
+        return operationResult;
+    }
 }
