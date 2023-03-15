@@ -6,7 +6,7 @@ using Usp_Project.Utils;
 
 namespace USP_Project.Data.Repository;
 
-public class Repository<T> : IRepository<T> where T : class
+public class Repository<T> : IRepository<T> where T : class, IEntity
 {
     private readonly UspDbContext _db;
     protected readonly DbSet<T> _dbSet;
@@ -77,6 +77,28 @@ public class Repository<T> : IRepository<T> where T : class
         {
             var result = await this._db.Set<T>().Filter(filters).Transform(transformations).ToListAsync(token);
             operationResult.Data = result;
+        }
+        catch (Exception ex)
+        {
+            operationResult.AppendError(ex);
+        }
+
+        return operationResult;
+    }
+
+    public async Task<OperationResult> UpdateAsync(T entity, CancellationToken token)
+    {
+        var operationResult = new OperationResult();
+        if (!operationResult.ValidateNotNull(entity)) return operationResult;
+
+        try
+        {
+            var trackedEntity = await this._db.Set<T>().FirstOrDefaultAsync(e => e.Id == entity.Id, token);
+            if (trackedEntity is not null) this._db.Entry(trackedEntity).State = EntityState.Detached;
+            this._db.Entry(entity).State = EntityState.Modified;
+
+            this._db.Set<T>().Update(entity);
+            await this._db.SaveChangesAsync(token);
         }
         catch (Exception ex)
         {
