@@ -51,4 +51,21 @@ public class Repository<T> : IRepository<T> where T : class
 
         return operationResult;
     }
+
+    public async Task<OperationResult<T>> GetAsync(IEnumerable<Expression<Func<T, bool>>> filters, IEnumerable<Func<IQueryable<T>, IQueryable<T>>> transformations, CancellationToken token)
+    {
+        var operationResult = new OperationResult<T>();
+
+        try
+        {
+            var result = await this._db.Set<T>().Filter(filters).Transform(transformations).FirstOrDefaultAsync(token);
+            operationResult.Data = result;
+        }
+        catch (Exception ex)
+        {
+            operationResult.AppendError(ex);
+        }
+
+        return operationResult;
+    }
 }
