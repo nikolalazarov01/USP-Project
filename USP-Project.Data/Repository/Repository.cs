@@ -27,7 +27,7 @@ public class Repository<T> : IRepository<T> where T : class
         }
         catch (Exception ex)
         {
-            
+            operationResult.AppendError(ex);
         }
 
         return operationResult;
