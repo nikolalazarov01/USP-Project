@@ -18,6 +18,15 @@ public static class OperationResultExtensions
 
         return false;
     }
+
+    public static void AppendError(this OperationResult operationResult, Exception exception)
+    {
+        if (operationResult is null) throw new ArgumentNullException(nameof(operationResult));
+        if (exception is null) return;
+
+        var errorMessage = exception.Message;
+        operationResult.AddError(errorMessage);
+    }
     
     private static string FormatErrorMessage(string filePath, string memberName, int line, string argumentExpression) => $"{filePath} ({memberName};{line}) - Expression [{argumentExpression}]";
 }
