@@ -18,7 +18,8 @@ public class Repository<T> : IRepository<T> where T : class
     public async Task<OperationResult> CreateAsync(T entity, CancellationToken token)
     {
         var operationResult = new OperationResult();
-
+        if (!operationResult.ValidateNotNull(entity)) return operationResult;
+        
         try
         {
             await this._db.AddAsync(entity, token);
