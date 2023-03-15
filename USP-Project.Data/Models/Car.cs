@@ -1,9 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using USP_Project.Data.Contracts;
 
 namespace USP_Project.Data.Models;
 
-public class Car
+public class Car : IEntity
 {
     [Key]
     public Guid Id { get; set; }

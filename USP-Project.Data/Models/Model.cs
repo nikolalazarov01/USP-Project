@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using USP_Project.Data.Contracts;
 
 namespace USP_Project.Data.Models;
 
-public class Model
+public class Model : IEntity
 {
     [Key]
     public Guid Id { get; set; }

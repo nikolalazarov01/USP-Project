@@ -1,9 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using USP_Project.Data.Contracts;
 
 namespace USP_Project.Data.Models;
 
-public class Extra
+public class Extra : IEntity
 {
     [Key]
     public Guid Id { get; set; }
