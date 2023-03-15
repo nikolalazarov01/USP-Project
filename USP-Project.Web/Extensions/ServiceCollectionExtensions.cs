@@ -1,4 +1,6 @@
-﻿namespace USP_Project.Web.Extensions;
+﻿using USP_Project.Data.Contracts;
+
+namespace USP_Project.Web.Extensions;
 
 public static class ServiceCollectionExtensions
 {
@@ -20,6 +22,15 @@ public static class ServiceCollectionExtensions
                 options.AppId = configuration.GetSection("Facebook")[nameof(options.AppId)];
                 options.AppSecret = configuration.GetSection("Facebook")[nameof(options.AppSecret)];
             });
+        
+        return services;
+    }
+
+    public static IServiceCollection ConfigureServices(this IServiceCollection services)
+    {
+        if (services is null) throw new ArgumentNullException(nameof(services));
+
+        services.AddScoped(typeof(IRepository<>), typeof(IRepository<>));
         
         return services;
     }

@@ -11,6 +11,7 @@ var connectionString = builder.Configuration.GetSection("Database")["ConnectionS
 builder.Services
     .AddData(connectionString)
     .AddApplicationAuthentication(builder.Configuration)
+    .ConfigureServices()
     .AddScoped<IEmailSender, NullMailSender>()
     .AddControllersWithViews();
 
