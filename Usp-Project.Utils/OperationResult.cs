@@ -18,7 +18,7 @@ public class OperationResult
     public override string ToString() => string.Join(Environment.NewLine, this._errors);
 }
 
-public class OperationResult<T> : OperationResult where T : class
+public class OperationResult<T> : OperationResult
 {
-    public T? Data { get; set; }
+    public T Data { get; set; }
 }
