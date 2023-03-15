@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using USP_Project.Data.Contracts;
+using Usp_Project.Utils;
 
 namespace USP_Project.Data.Repository;
 
@@ -12,5 +13,22 @@ public class Repository<T> : IRepository<T> where T : class
     {
         _db = db;
         _dbSet = _db.Set<T>();
+    }
+
+    public async Task<OperationResult> CreateAsync(T entity, CancellationToken token)
+    {
+        var operationResult = new OperationResult();
+
+        try
+        {
+            await this._db.AddAsync(entity, token);
+            await this._db.SaveChangesAsync(token);
+        }
+        catch (Exception ex)
+        {
+            
+        }
+
+        return operationResult;
     }
 }
