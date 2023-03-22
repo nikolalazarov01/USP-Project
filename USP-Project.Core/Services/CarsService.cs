@@ -100,4 +100,17 @@ public class CarsService : ICarsService
 
         return operationResult;
     }
+
+    public async Task<OperationResult<IEnumerable<Car>>> SearchAsync(
+        string searchTerm,
+        CancellationToken cancellationToken = default)
+    {
+        var carsResult = await _cars
+            .FuzzySearchAsync(new (Expression<Func<Car, string>>, string)[]
+            {
+                (c => c.Brand.Name, searchTerm)
+            }, cancellationToken);
+
+        return carsResult;
+    }
 }

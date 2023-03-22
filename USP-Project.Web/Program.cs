@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Identity.UI.Services;
+using USP_Project.Core.Extensions;
 using USP_Project.Data.Extensions;
 using USP_Project.Web;
 using USP_Project.Web.Extensions;
@@ -10,6 +11,7 @@ var connectionString = builder.Configuration.GetSection("Database")["ConnectionS
 
 builder.Services
     .AddData(connectionString)
+    .AddCore()
     .AddApplicationAuthentication(builder.Configuration)
     .ConfigureServices()
     .AddScoped<IEmailSender, NullMailSender>()
