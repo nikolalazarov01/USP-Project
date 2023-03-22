@@ -10,12 +10,12 @@ public class Car : IEntity
     public Guid Id { get; set; }
     
     [Required]
-    [ForeignKey("Brand")]
+    [ForeignKey(nameof(Brand))]
     public Guid BrandId { get; set; }
     public Brand Brand { get; set; }
     
     [Required]
-    [ForeignKey("Model")]
+    [ForeignKey(nameof(Model))]
     public Guid ModelId { get; set; }
     public Model Model { get; set; }
 

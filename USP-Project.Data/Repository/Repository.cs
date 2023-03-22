@@ -9,12 +9,13 @@ namespace USP_Project.Data.Repository;
 public class Repository<T> : IRepository<T> where T : class, IEntity
 {
     private readonly UspDbContext _db;
-    protected readonly DbSet<T> _dbSet;
+    
+    protected readonly DbSet<T> DbSet;
 
     public Repository(UspDbContext db)
     {
         _db = db;
-        _dbSet = _db.Set<T>();
+        DbSet = _db.Set<T>();
     }
 
     public async Task<OperationResult> CreateAsync(T entity, CancellationToken token)

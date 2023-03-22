@@ -21,4 +21,8 @@ public class OperationResult
 public class OperationResult<T> : OperationResult
 {
     public T Data { get; set; }
+
+    public static OperationResult<T> Success(T data)
+        => new() { Data = data };
+    
 }
