@@ -30,7 +30,6 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection ConfigureServices(this IServiceCollection services)
     {
         if (services is null) throw new ArgumentNullException(nameof(services));
-
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
         
         return services;

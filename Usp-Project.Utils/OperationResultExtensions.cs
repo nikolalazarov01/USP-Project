@@ -28,5 +28,18 @@ public static class OperationResultExtensions
         operationResult.AddError(errorMessage);
     }
     
+    public static TOperationResult AppendErrors<TOperationResult>(this TOperationResult operationResult, OperationResult other)
+        where TOperationResult : OperationResult
+    {
+        if (operationResult is null) throw new ArgumentNullException(nameof(operationResult));
+
+        foreach (var error in other.Errors.OrEmptyIfNull().IgnoreNullValues()!)
+        {
+            operationResult.AddError(error);
+        }
+
+        return operationResult;
+    }
+    
     private static string FormatErrorMessage(string filePath, string memberName, int line, string argumentExpression) => $"{filePath} ({memberName};{line}) - Expression [{argumentExpression}]";
 }

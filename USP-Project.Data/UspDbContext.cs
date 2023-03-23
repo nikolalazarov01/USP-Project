@@ -12,10 +12,18 @@ public class UspDbContext : IdentityDbContext<IdentityUser, IdentityRole, string
     {
     }
 
+    public int Levenshtein(string stringOne, string stringTwo)
+        => throw new NotImplementedException();
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         builder.ApplyConfigurationsFromAssembly(typeof(UspDbContext).Assembly);
         base.OnModelCreating(builder);
+        
+        builder.HasDbFunction(
+                typeof(UspDbContext).GetMethod(nameof(Levenshtein),
+                new []{ typeof(string), typeof(string) })!)
+            .HasName("levenshtein");
 
         builder.Entity<Car>()
             .HasOne(c => c.Brand)
@@ -37,18 +45,15 @@ public class UspDbContext : IdentityDbContext<IdentityUser, IdentityRole, string
 
         builder.Entity<CarsExtras>()
             .HasKey(ce => new { ce.CarId, ce.ExtraId });
+            
         builder.Entity<CarsExtras>()
             .HasOne(ce => ce.Car)
             .WithMany(c => c.CarsExtras)
             .HasForeignKey(ce => ce.CarId);
+        
         builder.Entity<CarsExtras>()
             .HasOne(ce => ce.Extra)
             .WithMany(c => c.CarsExtras)
             .HasForeignKey(ce => ce.ExtraId);
-    }
-
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        base.OnConfiguring(optionsBuilder);
     }
 }

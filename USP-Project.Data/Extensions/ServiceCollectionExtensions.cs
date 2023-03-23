@@ -2,6 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
+using USP_Project.Data.Contracts;
+using USP_Project.Data.Repository;
 
 namespace USP_Project.Data.Extensions;
 
@@ -16,7 +18,8 @@ public static class ServiceCollectionExtensions
             .AddDbContext<UspDbContext>((sp, options) =>
                 options
                     .UseMemoryCache(sp.GetRequiredService<IMemoryCache>())
-                    .UseNpgsql(connectionString));
+                    .UseNpgsql(connectionString))
+            .AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
         services
             .AddIdentity<IdentityUser, IdentityRole>(options =>

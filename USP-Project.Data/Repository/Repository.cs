@@ -9,12 +9,13 @@ namespace USP_Project.Data.Repository;
 public class Repository<T> : IRepository<T> where T : class, IEntity
 {
     private readonly UspDbContext _db;
-    protected readonly DbSet<T> _dbSet;
+    
+    protected readonly DbSet<T> DbSet;
 
     public Repository(UspDbContext db)
     {
         _db = db;
-        _dbSet = _db.Set<T>();
+        DbSet = _db.Set<T>();
     }
 
     public async Task<OperationResult> CreateAsync(T entity, CancellationToken token)
@@ -124,5 +125,22 @@ public class Repository<T> : IRepository<T> where T : class, IEntity
         }
 
         return operationResult;
+    }
+
+    public async Task<OperationResult<IEnumerable<T>>> FuzzySearchAsync(
+        IEnumerable<(Expression<Func<T, string>>, string)> comparings,
+        CancellationToken token)
+    {
+        var query = DbSet.AsQueryable();
+        foreach (var (selector, searchTerm) in comparings)
+        {
+            var funcSelector = selector.Compile();
+            query = query.Where(e => _db.Levenshtein(funcSelector(e), searchTerm) <= 3);
+        }
+
+        return new OperationResult<IEnumerable<T>>
+        {
+            Data = await query.ToListAsync(token)
+        };
     }
 }
