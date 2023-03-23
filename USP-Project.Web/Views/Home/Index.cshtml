@@ -1,8 +1,80 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
+<div class="row justify-content-start">
+    <div class="col-md-3 filters-container">
+        <h4>Filters</h4>
+        <form asp-action="Index" method="get">
+            <div class="form-group">
+                <label>Brand:</label>
+                <select class="form-control" name="BrandId">
+                    <option value="">--All--</option>
+                    @if (ViewData["Brands"] != null)
+                    {
+                        @foreach (var brand in ViewData["Brands"] as IEnumerable<USP_Project.Data.Models.Brand>)
+                        {
+                            <option value="@brand.Id">@brand.Name</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Model:</label>
+                <select class="form-control" name="ModelId">
+                    <option value="">--All--</option>
+                    @if (ViewData["Models"] != null)
+                    {
+                        @foreach (var models in ViewData["Models"] as IEnumerable<USP_Project.Data.Models.Model>)
+                        {
+                            <option value="@models.Id">@models.Name</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Extras:</label><br />
+                @if (ViewData["Extras"] != null)
+                {
+                    @foreach (var extra in ViewData["Extras"] as IEnumerable<USP_Project.Data.Models.Extra>)
+                    {
+                        <div class="checkbox">
+                            <label><input type="checkbox" name="Extras" value="@extra.Id">@extra.Name</label>
+                        </div>
+                    }
+                }
+            </div>
+            <div class="form-group">
+                <label>Year of Production:</label>
+                <input type="range" min="1970" max="2023" value="2010" class="slider" id="Year" name="Year">
+                <p>Year: <span id="year"></span></p>
+            </div>
+            <div class="form-group">
+                <label>Engine Size:</label>
+                <input type="text" name="EngineSize" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label>Engine Type:</label>
+                <div class="radio">
+                    <label><input type="radio" name="EngineType" value="Petrol">Petrol</label>
+                </div>
+                <div class="radio">
+                    <label><input type="radio" name="EngineType" value="Diesel">Diesel</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Transmission:</label>
+                <div class="radio">
+                    <label><input type="radio" name="Transmission" value="Automatic">Automatic</label>
+                </div>
+                <div class="radio">
+                    <label><input type="radio" name="Transmission" value="Manual">Manual</label>
+                </div>
+            </div>
+            <button type="submit" class="button">Apply Filters</button>
+        </form>
+    </div>
+    <div class="col-md-9">
+        <h4>All cars</h4>
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    </div>
 </div>

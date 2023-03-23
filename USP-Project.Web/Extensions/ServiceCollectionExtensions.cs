@@ -1,4 +1,5 @@
 ﻿using USP_Project.Data.Contracts;
+using USP_Project.Data.Repository;
 
 namespace USP_Project.Web.Extensions;
 
@@ -30,7 +31,7 @@ public static class ServiceCollectionExtensions
     {
         if (services is null) throw new ArgumentNullException(nameof(services));
 
-        services.AddScoped(typeof(IRepository<>), typeof(IRepository<>));
+        services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
         
         return services;
     }
