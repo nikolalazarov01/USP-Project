@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using USP_Project.Core.Contracts;
 using USP_Project.Web.Models.Cars;
 
@@ -15,8 +16,17 @@ public class CarsController : Controller
 
     // TODO: Create a view with a form for creating a new Car:
     [HttpGet]
-    public IActionResult Add() => Ok();
-        // => View(new CreateCarInputModel());
+    public async Task<IActionResult> Add()
+    {
+        var model = new CreateCarInputModel
+        {
+            AllBrands = (await _carsService.AllBrands()).Select(b => b.Name).ToList(),
+            AllModels = (await  _carsService.AllModels()).Select(m => m.Name).ToList(),
+        };
+        
+        return View(model);
+    }
+    // => View(new CreateCarInputModel());
 
     [HttpPost]
     public async Task<IActionResult> Add([FromForm] CreateCarInputModel carInputModel)

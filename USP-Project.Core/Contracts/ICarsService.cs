@@ -13,4 +13,8 @@ public interface ICarsService
         CancellationToken cancellationToken = default);
 
     Task<OperationResult<IEnumerable<Car>>> SearchAsync(string searchTerm, CancellationToken cancellationToken = default);
+    
+    Task<IEnumerable<Model>> AllModels(CancellationToken cancellationToken = default);
+    
+    Task<IEnumerable<Brand>> AllBrands(CancellationToken cancellationToken = default);
 }

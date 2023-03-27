@@ -113,4 +113,16 @@ public class CarsService : ICarsService
 
         return carsResult;
     }
+
+    public async Task<IEnumerable<Model>> AllModels(CancellationToken cancellationToken = default)
+    {
+        var result = await _models.GetManyAsync(default!, default!, cancellationToken);
+        return result.IsSuccessfull ? result.Data : Enumerable.Empty<Model>();
+    }
+
+    public async Task<IEnumerable<Brand>> AllBrands(CancellationToken cancellationToken = default)
+    {
+        var result = await _brands.GetManyAsync(default!, default!, cancellationToken);
+        return result.IsSuccessfull ? result.Data : Enumerable.Empty<Brand>();
+    }
 }
