@@ -13,7 +13,7 @@ builder.Services
     .AddData(connectionString)
     .AddCore()
     .AddApplicationAuthentication(builder.Configuration)
-    .ConfigureServices()
+    //.ConfigureServices()
     .AddScoped<IEmailSender, NullMailSender>()
     .AddControllersWithViews();
 

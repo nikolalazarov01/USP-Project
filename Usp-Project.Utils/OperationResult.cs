@@ -20,7 +20,10 @@ public class OperationResult
 
 public class OperationResult<T> : OperationResult
 {
+    public string[] errors;
+
     public T Data { get; set; }
+    public bool Succeeded { get; set; }
 
     public static OperationResult<T> Success(T data)
         => new() { Data = data };

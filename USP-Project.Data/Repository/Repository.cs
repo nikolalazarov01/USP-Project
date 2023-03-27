@@ -143,4 +143,9 @@ public class Repository<T> : IRepository<T> where T : class, IEntity
             Data = await query.ToListAsync(token)
         };
     }
+
+    public Task GetAsync(Guid brandId, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
+    }
 }

@@ -24,4 +24,5 @@ public interface IRepository<T> where T : class, IEntity
     Task<OperationResult<IEnumerable<T>>> FuzzySearchAsync(
         IEnumerable<(Expression<Func<T, string>>, string)> comparings,
         CancellationToken token);
+    Task GetAsync(Guid brandId, CancellationToken cancellationToken);
 }
