@@ -6,28 +6,50 @@
 
 <h2>Add New Car</h2>
 
+@if (ViewData["Errors"] != null)
+{
+    <div class="alert alert-danger">
+        @foreach (var error in (IEnumerable<string>)ViewData["Errors"])
+        {
+            <div>@error</div>
+        }
+    </div>
+}
+
 <form method="post">
-    <div asp-validation-summary="All" class="text-danger"></div>
-
     <div class="form-group">
-        <label asp-for="BrandId" class="control-label"></label>
-        <select asp-for="BrandId" asp-items="@(new SelectList(Model.Brands, "Value", "Text"))" class="form-control"></select>
-        <span asp-validation-for="BrandId" class="text-danger"></span>
+        <label for="BrandName">Brand Name</label>
+        <select class="form-control" id="BrandName" name="BrandName">
+            @foreach (var brand in Model.AllBrands)
+            {
+                <option>@brand</option>
+            }
+        </select>
+        <span asp-validation-for="BrandName" class="text-danger"></span>
     </div>
-
     <div class="form-group">
-        <label asp-for="ModelId" class="control-label"></label>
-        <select asp-for="ModelId" asp-items="@(new SelectList(Model.Models, "Value", "Text"))" class="form-control"></select>
-        <span asp-validation-for="ModelId" class="text-danger"></span>
+        <label for="BrandDescription">Brand Description</label>
+        <input class="form-control" id="BrandDescription" name="BrandDescription" value="@Model.BrandDescription" />
+        <span asp-validation-for="BrandDescription" class="text-danger"></span>
     </div>
-
     <div class="form-group">
-        <label asp-for="Extras" class="control-label"></label>
-        <select asp-for="Extras" asp-items="@(new SelectList(Model.Extras, "Value", "Text"))" multiple class="form-control"></select>
+        <label for="ModelName">Model Name</label>
+        <select class="form-control" id="ModelName" name="ModelName">
+            @foreach (var models in Model.AllModels)
+            {
+                <option>@models</option>
+            }
+        </select>
+        <span asp-validation-for="ModelName" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label for="Extras">Extras</label>
+        <select class="form-control" id="Extras" name="Extras" multiple>
+            <option value="Air Conditioning">Air Conditioning</option>
+            <option value="GPS Navigation">GPS Navigation</option>
+            <option value="Bluetooth">Bluetooth</option>
+        </select>
         <span asp-validation-for="Extras" class="text-danger"></span>
     </div>
-
-    <div class="form-group">
-        <input type="submit" value="Create" class="btn btn-primary" />
-    </div>
+    <button type="submit" class="btn btn-primary">Create</button>
 </form>

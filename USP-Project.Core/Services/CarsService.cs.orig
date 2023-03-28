@@ -102,6 +102,29 @@ public class CarsService : ICarsService
         return operationResult;
     }
 
+    public Task<OperationResult<Car>> CreateAsync(Guid brandId, Guid modelId, IEnumerable<string> extras, CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<IEnumerable<Brand>> GetAllBrands(CancellationToken cancellationToken = default)
+    {
+        var brandsResult = await _brands.GetAsync(null!, null!, cancellationToken);
+        return (IEnumerable<Brand>)brandsResult.Data;
+    }
+
+    public async Task<IEnumerable<Extra>> GetAllExtras(CancellationToken cancellationToken = default)
+    {
+        var extrasResult = await _extras.GetAsync(null!, null!, cancellationToken);
+        return (IEnumerable<Extra>)extrasResult.Data;
+    }
+
+    public async Task<IEnumerable<Model>> GetAllModels(CancellationToken cancellationToken = default)
+    {
+        var modelsResult = await _models.GetAsync(null!, null!, cancellationToken);
+        return (IEnumerable<Model>)modelsResult.Data;
+    }
+
     public async Task<OperationResult<IEnumerable<Car>>> SearchAsync(
         string searchTerm,
         CancellationToken cancellationToken = default)
@@ -115,6 +138,11 @@ public class CarsService : ICarsService
         return carsResult;
     }
 
+<<<<<<< HEAD
+    Task<IEnumerable<Model>> ICarsService.GetAllExtras(CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
+=======
     public async Task<IEnumerable<Model>> AllModels(CancellationToken cancellationToken = default)
     {
         var result = await _models.GetManyAsync(default!, default!, cancellationToken);
@@ -125,5 +153,6 @@ public class CarsService : ICarsService
     {
         var result = await _brands.GetManyAsync(default!, default!, cancellationToken);
         return result.IsSuccessfull ? result.Data : Enumerable.Empty<Brand>();
+>>>>>>> 5afd1d0784885cbb0464ce5bc10a5a3937b22849
     }
 }
