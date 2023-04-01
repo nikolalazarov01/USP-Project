@@ -4,7 +4,7 @@
     ViewData["Title"] = "Add Car";
 }
 
-<h2>Add New Car</h2>
+
 
 @if (ViewData["Errors"] != null)
 {
@@ -15,41 +15,46 @@
         }
     </div>
 }
-
-<form method="post">
-    <div class="form-group">
-        <label for="BrandName">Brand Name</label>
-        <select class="form-control" id="BrandName" name="BrandName">
-            @foreach (var brand in Model.AllBrands)
-            {
-                <option>@brand</option>
-            }
-        </select>
-        <span asp-validation-for="BrandName" class="text-danger"></span>
+<div class="row">
+    <div class="col-5">
+        <h2>Add New Car</h2>
+        <hr/>
+        <form method="post">
+            <div class="form-group">
+                <label for="BrandName">Brand Name</label>
+                <select class="form-control" id="BrandName" name="BrandName">
+                    @foreach (var brand in Model.AllBrands)
+                    {
+                        <option>@brand</option>
+                    }
+                </select>
+                <span asp-validation-for="BrandName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label for="BrandDescription">Brand Description</label>
+                <input class="form-control" id="BrandDescription" name="BrandDescription" value="@Model.BrandDescription"/>
+                <span asp-validation-for="BrandDescription" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label for="ModelName">Model Name</label>
+                <select class="form-control" id="ModelName" name="ModelName">
+                    @foreach (var models in Model.AllModels)
+                    {
+                        <option>@models</option>
+                    }
+                </select>
+                <span asp-validation-for="ModelName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label for="Extras">Extras</label>
+                <select class="form-control" id="Extras" name="Extras" multiple>
+                    <option value="Air Conditioning">Air Conditioning</option>
+                    <option value="GPS Navigation">GPS Navigation</option>
+                    <option value="Bluetooth">Bluetooth</option>
+                </select>
+                <span asp-validation-for="Extras" class="text-danger"></span>
+            </div>
+            <button type="submit" class="btn btn-primary" style="margin-top: 0.5rem;">Create</button>
+        </form>
     </div>
-    <div class="form-group">
-        <label for="BrandDescription">Brand Description</label>
-        <input class="form-control" id="BrandDescription" name="BrandDescription" value="@Model.BrandDescription" />
-        <span asp-validation-for="BrandDescription" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label for="ModelName">Model Name</label>
-        <select class="form-control" id="ModelName" name="ModelName">
-            @foreach (var models in Model.AllModels)
-            {
-                <option>@models</option>
-            }
-        </select>
-        <span asp-validation-for="ModelName" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label for="Extras">Extras</label>
-        <select class="form-control" id="Extras" name="Extras" multiple>
-            <option value="Air Conditioning">Air Conditioning</option>
-            <option value="GPS Navigation">GPS Navigation</option>
-            <option value="Bluetooth">Bluetooth</option>
-        </select>
-        <span asp-validation-for="Extras" class="text-danger"></span>
-    </div>
-    <button type="submit" class="btn btn-primary">Create</button>
-</form>
+</div>
