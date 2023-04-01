@@ -48,6 +48,16 @@ public class CarsController : Controller
             return RedirectToAction(nameof(Add));
         }
         
+        var fileDic = "Images";
+        string filePath = Path.Combine(_hostingEnv.WebRootPath, fileDic);
+        
+        var imageUploadResult = await _fileService.Upload(carInputModel.Image, filePath);
+        if (!imageUploadResult.IsSuccessfull)
+        {
+            ViewData[ErrorsKey] = imageUploadResult.Errors;
+            return RedirectToAction(nameof(Add));
+        }
+        
         var result = await _carsService.CreateAsync(
             carInputModel.BrandName,
             carInputModel.BrandDescription,
@@ -60,15 +70,6 @@ public class CarsController : Controller
             return RedirectToAction(nameof(Add));
         }
 
-        var fileDic = "Files";
-        string filePath = Path.Combine(_hostingEnv.WebRootPath, fileDic);
-
-        var imageUploadResult = await _fileService.Upload(carInputModel.Image, filePath);
-        if (!imageUploadResult.IsSuccessfull)
-        {
-            ViewData[ErrorsKey] = result.Errors;
-            return RedirectToAction(nameof(Add));
-        }
         
         // TODO: Potentially add a Success message to the View Data ...
         return RedirectToAction(nameof(HomeController.Index), "Home");
