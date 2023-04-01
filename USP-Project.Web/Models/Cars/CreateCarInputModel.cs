@@ -22,4 +22,6 @@ public class CreateCarInputModel
     public ICollection<string> AllModels { get; set; } = default!;
 
     public ICollection<string> Extras { get; set; } = new List<string>();
+    
+    public IFormFile? Image { get; set; }
 }
