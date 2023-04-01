@@ -6,9 +6,9 @@ namespace USP_Project.Core.Services;
 
 public class FileService : IFileService
 {
-    public async Task<OperationResult> Upload(IFormFile? fileToUpload, string filePath)
+    public async Task<OperationResult<string>> Upload(IFormFile? fileToUpload, string filePath)
     {
-        var operationResult = new OperationResult();
+        var operationResult = new OperationResult<string>();
         
         if (fileToUpload is null)
         {
@@ -20,13 +20,14 @@ public class FileService : IFileService
             Directory.CreateDirectory(filePath);
 
         
-        var fileName = fileToUpload.FileName;
+        var fileName = Guid.NewGuid().ToString();
         var fullPath = Path.Combine(filePath, fileName);
 
 
         await using FileStream fs = System.IO.File.Create(fullPath);
         await fileToUpload.CopyToAsync(fs);
 
+        operationResult.Data = fileName;
         return operationResult;
     }
 }
