@@ -7,5 +7,10 @@ namespace USP_Project.Core.Extensions;
 public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddCore(this IServiceCollection services)
-        => services.AddScoped<ICarsService, CarsService>();
+    {
+        services.AddScoped<ICarsService, CarsService>();
+        services.AddScoped<IFileService, FileService>();
+
+        return services;
+    } 
 }
