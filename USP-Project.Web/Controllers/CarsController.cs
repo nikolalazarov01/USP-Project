@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using USP_Project.Core.Contracts;
 using USP_Project.Web.Models.Cars;
-using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
 
 namespace USP_Project.Web.Controllers;
 
@@ -33,7 +31,6 @@ public class CarsController : Controller
         
         return View(model);
     }
-    // => View(new CreateCarInputModel());
 
     [HttpPost]
     public async Task<IActionResult> Add([FromForm] CreateCarInputModel carInputModel)
@@ -48,13 +45,13 @@ public class CarsController : Controller
             return RedirectToAction(nameof(Add));
         }
         
-        var fileDic = "Images";
-        string filePath = Path.Combine(_hostingEnv.WebRootPath, fileDic);
+        const string fileDic = "Images";
+        var filePath = Path.Combine(_hostingEnv.WebRootPath, fileDic);
         
-        var imageUploadResult = await _fileService.Upload(carInputModel.Image, filePath);
-        if (!imageUploadResult.IsSuccessfull)
+        var imagesUploadResult = await _fileService.Upload(carInputModel.Images, filePath);
+        if (!imagesUploadResult.IsSuccessfull)
         {
-            ViewData[ErrorsKey] = imageUploadResult.Errors;
+            ViewData[ErrorsKey] = imagesUploadResult.Errors;
             return RedirectToAction(nameof(Add));
         }
         
@@ -62,6 +59,7 @@ public class CarsController : Controller
             carInputModel.BrandName,
             carInputModel.BrandDescription,
             carInputModel.ModelName,
+            imagesUploadResult.Data,
             carInputModel.Extras);
 
         if (!result.IsSuccessfull)

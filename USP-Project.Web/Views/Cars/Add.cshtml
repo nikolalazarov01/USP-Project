@@ -22,7 +22,7 @@
         <form method="post">
             <div class="form-group">
                 <label for="BrandName">Brand Name</label>
-                <select class="form-control" id="BrandName" name="BrandName">
+                <select asp-for="BrandName" class="form-control" id="BrandName">
                     @foreach (var brand in Model.AllBrands)
                     {
                         <option>@brand</option>
@@ -32,12 +32,12 @@
             </div>
             <div class="form-group">
                 <label for="BrandDescription">Brand Description</label>
-                <input class="form-control" id="BrandDescription" name="BrandDescription" value="@Model.BrandDescription"/>
+                <input asp-for="BrandDescription" class="form-control" id="BrandDescription" value="@Model.BrandDescription"/>
                 <span asp-validation-for="BrandDescription" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label for="ModelName">Model Name</label>
-                <select class="form-control" id="ModelName" name="ModelName">
+                <select class="form-control" id="ModelName" asp-for="ModelName">
                     @foreach (var models in Model.AllModels)
                     {
                         <option>@models</option>
@@ -47,7 +47,7 @@
             </div>
             <div class="form-group">
                 <label for="Extras">Extras</label>
-                <select class="form-control" id="Extras" name="Extras" multiple>
+                <select class="form-control" id="Extras" asp-for="Extras" multiple>
                     <option value="Air Conditioning">Air Conditioning</option>
                     <option value="GPS Navigation">GPS Navigation</option>
                     <option value="Bluetooth">Bluetooth</option>
@@ -56,7 +56,7 @@
             </div>
             <div class="form-group">
                 <label for="Image">Car Image</label>
-                <input type="file" id="Image" name="ImageUpload"/>
+                <input multiple type="file" id="Image" asp-for="Images"/>
             </div>
             <button type="submit" class="btn btn-primary" style="margin-top: 0.5rem;">Create</button>
         </form>

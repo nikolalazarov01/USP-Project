@@ -1,7 +1,6 @@
 ﻿using System.Linq.Expressions;
 using USP_Project.Core.Contracts;
 using USP_Project.Data.Models;
-using USP_Project.Data.Repository;
 using Usp_Project.Utils;
 using USP_Project.Data.Contracts;
 
@@ -30,11 +29,12 @@ public class CarsService : ICarsService
         string brandName,
         string? brandDescription,
         string modelName,
+        IEnumerable<string> imageFileNames,
         IEnumerable<string> extras,
         CancellationToken cancellationToken = default)
     {
-        var car = new Car();
-        
+        var car = new Car { ImagePaths = imageFileNames.ToArray() };
+
         var brandResult = await _brands.GetAsync(new Expression<Func<Brand, bool>>[]
         {
             b => b.Name == brandName

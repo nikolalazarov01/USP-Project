@@ -29,7 +29,7 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection()
-    .UseStaticFiles()
+    .UseCachedStaticFiles(app.Environment)
     .UseRouting()
     .UseAuthentication()
     .UseAuthorization();

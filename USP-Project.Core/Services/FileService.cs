@@ -6,28 +6,45 @@ namespace USP_Project.Core.Services;
 
 public class FileService : IFileService
 {
-    public async Task<OperationResult<string>> Upload(IFormFile? fileToUpload, string filePath)
+    public async Task<OperationResult<string[]>> Upload(
+        IFormFile[]? filesToUpload,
+        string filePath)
     {
-        var operationResult = new OperationResult<string>();
+        var operationResult = new OperationResult<string[]>
+        { 
+            Data = Array.Empty<string>()
+        };
         
-        if (fileToUpload is null)
+        if (filesToUpload is null)
         {
-            operationResult.AddError("The provided file is null!");
+            operationResult.AddError("The provided file(s) is / are null!");
             return operationResult;
         }
 
-        if (!Directory.Exists(filePath))
-            Directory.CreateDirectory(filePath);
+        if (!Directory.Exists(filePath)) Directory.CreateDirectory(filePath);
 
-        
-        var fileName = Guid.NewGuid().ToString();
-        var fullPath = Path.Combine(filePath, fileName);
+        var fileUploadTasks = filesToUpload.Select(async f =>
+        {
+            var fileName = $"{f.FileName}_{Guid.NewGuid().ToString()}";
+            var fullPath = Path.Combine(filePath, fileName);
 
+            await using var fileStream = File.Create(fullPath);
+            await f.CopyToAsync(fileStream);
+            return fullPath;
+        });
 
-        await using FileStream fs = System.IO.File.Create(fullPath);
-        await fileToUpload.CopyToAsync(fs);
-
-        operationResult.Data = fileName;
-        return operationResult;
+        try
+        {
+            var fileNames = await Task.WhenAll(fileUploadTasks);
+            operationResult.Data = fileNames;
+            return operationResult;
+        }
+        catch (Exception e)
+        {
+            operationResult.AddError(e.Message);
+            operationResult.Data = Array.Empty<string>();
+            
+            return operationResult;
+        }
     }
 }

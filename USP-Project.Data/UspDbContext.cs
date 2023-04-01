@@ -29,6 +29,11 @@ public class UspDbContext : IdentityDbContext<IdentityUser, IdentityRole, string
             .HasOne(c => c.Brand)
             .WithMany(b => b.Cars)
             .OnDelete(DeleteBehavior.SetNull);
+
+        builder.Entity<Car>()
+            .Property(c => c.ImagePaths)
+            .HasColumnType("text[]")
+            .HasDefaultValue(new string[] { });
         
         builder.Entity<Brand>()
             .HasMany(b => b.Cars)

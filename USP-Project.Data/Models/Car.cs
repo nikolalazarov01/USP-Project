@@ -12,13 +12,18 @@ public class Car : IEntity
     [Required]
     [ForeignKey(nameof(Brand))]
     public Guid BrandId { get; set; }
+    
     public Brand Brand { get; set; }
     
     [Required]
     [ForeignKey(nameof(Model))]
     public Guid ModelId { get; set; }
+    
     public Model Model { get; set; }
 
     public ICollection<Extra>? Extras { get; set; }
+    
     public List<CarsExtras> CarsExtras { get; set; }
+
+    public string[] ImagePaths { get; set; }
 }
