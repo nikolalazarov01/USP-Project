@@ -17,11 +17,10 @@ public class FileService : IFileService
         }
 
         if (!Directory.Exists(filePath))
-
             Directory.CreateDirectory(filePath);
 
+        
         var fileName = fileToUpload.FileName;
-
         var fullPath = Path.Combine(filePath, fileName);
 
 

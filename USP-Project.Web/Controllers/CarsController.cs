@@ -2,17 +2,24 @@
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using USP_Project.Core.Contracts;
 using USP_Project.Web.Models.Cars;
+using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
 
 namespace USP_Project.Web.Controllers;
 
 public class CarsController : Controller
 {
     private readonly ICarsService _carsService;
+    private readonly IFileService _fileService;
+    private readonly IWebHostEnvironment _hostingEnv;
     
     private const string ErrorsKey = "Errors";
 
-    public CarsController(ICarsService carsService)
-        => _carsService = carsService;
+    public CarsController(ICarsService carsService, IFileService fileService, IWebHostEnvironment hostingEnv)
+    {
+        _carsService = carsService;
+        _fileService = fileService;
+        _hostingEnv = hostingEnv;
+    } 
 
     // TODO: Create a view with a form for creating a new Car:
     [HttpGet]
@@ -53,6 +60,16 @@ public class CarsController : Controller
             return RedirectToAction(nameof(Add));
         }
 
+        var fileDic = "Files";
+        string filePath = Path.Combine(_hostingEnv.WebRootPath, fileDic);
+
+        var imageUploadResult = await _fileService.Upload(carInputModel.Image, filePath);
+        if (!imageUploadResult.IsSuccessfull)
+        {
+            ViewData[ErrorsKey] = result.Errors;
+            return RedirectToAction(nameof(Add));
+        }
+        
         // TODO: Potentially add a Success message to the View Data ...
         return RedirectToAction(nameof(HomeController.Index), "Home");
     }
