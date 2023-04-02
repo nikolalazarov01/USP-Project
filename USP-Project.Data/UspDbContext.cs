@@ -12,6 +12,16 @@ public class UspDbContext : IdentityDbContext<IdentityUser, IdentityRole, string
     {
     }
 
+    public DbSet<Brand> Brands { get; set; }
+    
+    public DbSet<Model> Models { get; set; }
+    
+    public DbSet<Extra> Extras { get; set; }
+    
+    public DbSet<CarsExtras> CarExtras { get; set; }
+    
+    public DbSet<Car> Cars { get; set; }
+
     public int Levenshtein(string stringOne, string stringTwo)
         => throw new NotImplementedException();
 

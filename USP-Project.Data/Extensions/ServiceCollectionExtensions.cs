@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System.Reflection;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using USP_Project.Data.Contracts;
 using USP_Project.Data.Repository;
+using USP_Project.Data.Seeding;
 
 namespace USP_Project.Data.Extensions;
 
@@ -19,6 +21,7 @@ public static class ServiceCollectionExtensions
                 options
                     .UseMemoryCache(sp.GetRequiredService<IMemoryCache>())
                     .UseNpgsql(connectionString))
+            .AddSeeding()
             .AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
         services
@@ -37,6 +40,31 @@ public static class ServiceCollectionExtensions
 
         return services;
     }
-    
-    // TODO: Potentially add Seeding and Repository components next ...
+
+    private static IServiceCollection AddSeeding(this IServiceCollection services)
+    {
+        var seederTypes = Assembly
+            .GetExecutingAssembly()
+            .GetTypes()
+            .Where(t => t is { IsInterface: false, IsAbstract: false }
+                        && typeof(ISeeder).IsAssignableFrom(t))
+            .ToList();
+
+        foreach (var seederType in seederTypes)
+        {
+            services.AddScoped(typeof(ISeeder), seederType);
+        }
+
+        return services;
+    }
+
+    public static async Task SeedAsync(
+        this IServiceProvider serviceProvider,
+        CancellationToken cancellationToken = default)
+    {
+        await using var scope = serviceProvider.CreateAsyncScope();
+        
+        var seeder = scope.ServiceProvider.GetRequiredService<CompositeSeeder>();
+        await seeder.SeedAsync(cancellationToken);
+    }
 }
