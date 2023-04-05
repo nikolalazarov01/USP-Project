@@ -11,7 +11,9 @@ public class Brand : IEntity
     [Required]
     public string Name { get; set; }
     
-    public string? Description { get; set; } 
+    public string? Description { get; set; }
+
+    public ICollection<Model>? Models { get; set; }
     
     public ICollection<Car>? Cars { get; set; }
 }

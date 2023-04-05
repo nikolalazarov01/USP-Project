@@ -1,8 +1,10 @@
 ﻿using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
 using USP_Project.Core.Contracts;
 using USP_Project.Data.Models;
 using Usp_Project.Utils;
 using USP_Project.Data.Contracts;
+using USP_Project.Data.Models.Enums;
 
 namespace USP_Project.Core.Services;
 
@@ -103,27 +105,55 @@ public class CarsService : ICarsService
     }
 
     public async Task<OperationResult<IEnumerable<Car>>> SearchAsync(
-        string searchTerm,
+        string brandQuery,
+        string modelQuery,
+        int productionYear,
+        decimal? engineSize,
+        EngineType engineType,
+        Transmission transmission,
         CancellationToken cancellationToken = default)
     {
-        var carsResult = await _cars
-            .FuzzySearchAsync(new (Expression<Func<Car, string>>, string)[]
-            {
-                (c => c.Brand.Name, searchTerm)
-            }, cancellationToken);
+        var query = _cars.FuzzySearch(
+                new (Expression<Func<Car, string>>, string)[]
+                {
+                    (c => c.Brand.Name, brandQuery),
+                    (c => c.Model.Name, modelQuery)
+                });
 
-        return carsResult;
+        if (engineSize is not null)
+        {
+            query = query.Where(c => c.EngineSize == engineSize);
+        }
+        
+        var searchResult = await query
+            .Where(c => c.Engine == engineType && c.Transmission == transmission)
+            .ToListAsync(cancellationToken);
+
+        return new OperationResult<IEnumerable<Car>> { Data = searchResult };
     }
 
-    public async Task<IEnumerable<Model>> AllModels(CancellationToken cancellationToken = default)
+    public async Task<OperationResult<IEnumerable<Model>>> AllModels(CancellationToken cancellationToken = default)
     {
         var result = await _models.GetManyAsync(default!, default!, cancellationToken);
-        return result.IsSuccessfull ? result.Data : Enumerable.Empty<Model>();
+        return result;
     }
 
-    public async Task<IEnumerable<Brand>> AllBrands(CancellationToken cancellationToken = default)
+    public async Task<OperationResult<IEnumerable<Brand>>> AllBrands(CancellationToken cancellationToken = default)
     {
         var result = await _brands.GetManyAsync(default!, default!, cancellationToken);
-        return result.IsSuccessfull ? result.Data : Enumerable.Empty<Brand>();
+        return result;
+    }
+
+    public async Task<OperationResult<IEnumerable<Model>>> ModelsByBrand(
+        Guid brandId,
+        CancellationToken cancellationToken = default)
+    {
+        var models = await _models
+            .GetManyAsync(new Expression<Func<Model, bool>>[]
+            {
+                m => m.BrandId == brandId
+            }, default!, cancellationToken);
+
+        return models;
     }
 }

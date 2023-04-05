@@ -1,16 +1,22 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Npgsql;
 using USP_Project.Data.Models;
+using USP_Project.Data.Models.Enums;
+#pragma warning disable CS8618
 
 namespace USP_Project.Data;
 
 public class UspDbContext : IdentityDbContext<IdentityUser, IdentityRole, string>
 {
     public UspDbContext(DbContextOptions<UspDbContext> options)
-        : base(options)
-    {
-    }
+        : base(options) { }
+
+    static UspDbContext()
+        => NpgsqlConnection.GlobalTypeMapper
+            .MapEnum<Transmission>()
+            .MapEnum<EngineType>();
 
     public DbSet<Brand> Brands { get; set; }
     
@@ -41,9 +47,17 @@ public class UspDbContext : IdentityDbContext<IdentityUser, IdentityRole, string
             .OnDelete(DeleteBehavior.SetNull);
 
         builder.Entity<Car>()
+            .Property(c => c.EngineSize)
+            .HasPrecision(10, 8);
+
+        builder
+            .HasPostgresEnum<Transmission>()
+            .HasPostgresEnum<EngineType>();
+            
+        builder.Entity<Car>()
             .Property(c => c.ImagePaths)
             .HasColumnType("text[]")
-            .HasDefaultValue(new string[] { });
+            .HasDefaultValue(Array.Empty<string>());
         
         builder.Entity<Brand>()
             .HasMany(b => b.Cars)

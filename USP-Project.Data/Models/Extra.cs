@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using USP_Project.Data.Contracts;
 
 namespace USP_Project.Data.Models;
@@ -13,5 +12,6 @@ public class Extra : IEntity
     public string Name { get; set; }
     
     public ICollection<Car>? Cars { get; set; }
+    
     public List<CarsExtras> CarsExtras { get; set; }
 }

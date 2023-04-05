@@ -50,6 +50,7 @@ public static class ServiceCollectionExtensions
                         && typeof(ISeeder).IsAssignableFrom(t))
             .ToList();
 
+        services.AddScoped<CompositeSeeder>();
         foreach (var seederType in seederTypes)
         {
             services.AddScoped(typeof(ISeeder), seederType);
@@ -65,6 +66,13 @@ public static class ServiceCollectionExtensions
         await using var scope = serviceProvider.CreateAsyncScope();
         
         var seeder = scope.ServiceProvider.GetRequiredService<CompositeSeeder>();
+        var context = scope.ServiceProvider.GetRequiredService<UspDbContext>();
+        
+        // Adding fuzzy search functionality ... :)
+        await context.Database.ExecuteSqlRawAsync(
+            @"CREATE EXTENSION IF NOT EXISTS fuzzystrmatch;",
+            cancellationToken);
+        
         await seeder.SeedAsync(cancellationToken);
     }
 }

@@ -21,8 +21,7 @@ public interface IRepository<T> where T : class, IEntity
     
     Task<OperationResult> DeleteAsync(T entity, CancellationToken token);
     
-    Task<OperationResult<IEnumerable<T>>> FuzzySearchAsync(
-        IEnumerable<(Expression<Func<T, string>>, string)> comparings,
-        CancellationToken token);
+    IQueryable<T> FuzzySearch(IEnumerable<(Expression<Func<T, string>>, string)> comparings);
+    
     Task GetAsync(Guid brandId, CancellationToken cancellationToken);
 }

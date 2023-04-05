@@ -6,14 +6,15 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using USP_Project.Data;
+using USP_Project.Data.Models.Enums;
 
 #nullable disable
 
 namespace USP_Project.Data.Migrations
 {
     [DbContext(typeof(UspDbContext))]
-    [Migration("20230401173232_Adding an Image Paths property to the Car Model (supported only in Postgres)")]
-    partial class AddinganImagePathspropertytotheCarModelsupportedonlyinPostgres
+    [Migration("20230405203238_Adding an Engine Type and Transmission enums, as well as Engine Size properties to the Car model ...")]
+    partial class AddinganEngineTypeandTransmissionenumsaswellasEngineSizepropertiestotheCarmodel
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -22,6 +23,8 @@ namespace USP_Project.Data.Migrations
                 .HasAnnotation("ProductVersion", "6.0.14")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
+            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "engine_type", new[] { "petrol", "diesel" });
+            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "transmission", new[] { "automatic", "manual" });
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("CarExtra", b =>
@@ -250,7 +253,7 @@ namespace USP_Project.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Brand");
+                    b.ToTable("Brands");
                 });
 
             modelBuilder.Entity("USP_Project.Data.Models.Car", b =>
@@ -262,6 +265,13 @@ namespace USP_Project.Data.Migrations
                     b.Property<Guid>("BrandId")
                         .HasColumnType("uuid");
 
+                    b.Property<EngineType>("Engine")
+                        .HasColumnType("engine_type");
+
+                    b.Property<decimal?>("EngineSize")
+                        .HasPrecision(10, 8)
+                        .HasColumnType("numeric(10,8)");
+
                     b.Property<string[]>("ImagePaths")
                         .IsRequired()
                         .ValueGeneratedOnAdd()
@@ -271,13 +281,16 @@ namespace USP_Project.Data.Migrations
                     b.Property<Guid>("ModelId")
                         .HasColumnType("uuid");
 
+                    b.Property<Transmission>("Transmission")
+                        .HasColumnType("transmission");
+
                     b.HasKey("Id");
 
                     b.HasIndex("BrandId");
 
                     b.HasIndex("ModelId");
 
-                    b.ToTable("Car");
+                    b.ToTable("Cars");
                 });
 
             modelBuilder.Entity("USP_Project.Data.Models.CarsExtras", b =>
@@ -292,7 +305,7 @@ namespace USP_Project.Data.Migrations
 
                     b.HasIndex("ExtraId");
 
-                    b.ToTable("CarsExtras");
+                    b.ToTable("CarExtras");
                 });
 
             modelBuilder.Entity("USP_Project.Data.Models.Extra", b =>
@@ -307,7 +320,7 @@ namespace USP_Project.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Extra");
+                    b.ToTable("Extras");
                 });
 
             modelBuilder.Entity("USP_Project.Data.Models.Model", b =>
@@ -316,13 +329,18 @@ namespace USP_Project.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<Guid>("BrandId")
+                        .HasColumnType("uuid");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Model");
+                    b.HasIndex("BrandId");
+
+                    b.ToTable("Models");
                 });
 
             modelBuilder.Entity("CarExtra", b =>
@@ -429,9 +447,22 @@ namespace USP_Project.Data.Migrations
                     b.Navigation("Extra");
                 });
 
+            modelBuilder.Entity("USP_Project.Data.Models.Model", b =>
+                {
+                    b.HasOne("USP_Project.Data.Models.Brand", "Brand")
+                        .WithMany("Models")
+                        .HasForeignKey("BrandId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Brand");
+                });
+
             modelBuilder.Entity("USP_Project.Data.Models.Brand", b =>
                 {
                     b.Navigation("Cars");
+
+                    b.Navigation("Models");
                 });
 
             modelBuilder.Entity("USP_Project.Data.Models.Car", b =>

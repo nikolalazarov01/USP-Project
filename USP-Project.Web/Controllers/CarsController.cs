@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using USP_Project.Core.Contracts;
+using USP_Project.Web.Models;
 using USP_Project.Web.Models.Cars;
 
 namespace USP_Project.Web.Controllers;
@@ -23,13 +24,50 @@ public class CarsController : Controller
     [HttpGet]
     public async Task<IActionResult> Add()
     {
+        var allBrands = await _carsService.AllBrands();
+        var allModels = await _carsService.AllModels();
+        
         var model = new CreateCarInputModel
         {
-            AllBrands = (await _carsService.AllBrands()).Select(b => b.Name).ToList(),
-            AllModels = (await  _carsService.AllModels()).Select(m => m.Name).ToList(),
+            AllBrands = allBrands.Data.Select(b => b.Name).ToList(),
+            AllModels = allModels.Data.Select(m => m.Name).ToList()
         };
         
         return View(model);
+    }
+
+    [HttpGet]
+    [Route("models")]
+    public async Task<IActionResult> AllModelsByBrand([FromQuery] string brandId)
+    {
+        var result = await _carsService.ModelsByBrand(
+            Guid.Parse(brandId));
+        return result.IsSuccessfull ? Ok(result.Data) : NotFound();
+    }
+    
+    [HttpGet]
+    [Route("search")]
+    public async Task<IActionResult> Search([FromForm] CarSearchInputModel searchInputModel)
+    {
+        if (!ModelState.IsValid)
+        {
+            ViewData[ErrorsKey] = ModelState.SelectMany(x =>
+                x.Value?.Errors.Select(e => e.ErrorMessage)
+                ?? Array.Empty<string>());
+            
+            return RedirectToAction(nameof(Index), "Home");
+        }
+        
+        var searchResult = await _carsService.SearchAsync(
+            searchInputModel.Brand ?? string.Empty,
+            searchInputModel.Model ?? string.Empty,
+            searchInputModel.YearOfProduction,
+            searchInputModel.EngineSize,
+            searchInputModel.EngineType,
+            searchInputModel.Transmission);
+
+        // TODO: Add proper view models to be consumed by the client ...
+        return searchResult.IsSuccessfull ? Ok(searchResult.Data) : NotFound();
     }
 
     [HttpPost]
@@ -37,8 +75,7 @@ public class CarsController : Controller
     {
         if (!ModelState.IsValid)
         {
-            ViewData[ErrorsKey] = ModelState
-                .SelectMany(x =>
+            ViewData[ErrorsKey] = ModelState.SelectMany(x =>
                     x.Value?.Errors
                         .Select(e => e.ErrorMessage)
                                  ?? Array.Empty<string>());
