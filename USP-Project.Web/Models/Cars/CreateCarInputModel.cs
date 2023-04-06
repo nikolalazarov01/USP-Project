@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using USP_Project.Data.Models.Enums;
 
 namespace USP_Project.Web.Models.Cars;
 
@@ -18,6 +19,15 @@ public class CreateCarInputModel
     [MinLength(3, ErrorMessage = "Model name must have at least 3 characters.")]
     [MaxLength(200, ErrorMessage = "Model name should not have more than 200 characters.")]
     public string ModelName { get; set; } = default!;
+
+    [Required]
+    public EngineType EngineType { get; set; }
+    
+    [Required]
+    public Transmission Transmission { get; set; }
+
+    [Required]
+    public decimal? EngineSize { get; set; }
     
     public ICollection<string> AllModels { get; set; } = default!;
 

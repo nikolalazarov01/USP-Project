@@ -31,11 +31,20 @@ public class CarsService : ICarsService
         string brandName,
         string? brandDescription,
         string modelName,
+        EngineType engineType,
+        Transmission transmission,
+        decimal? engineSize,
         IEnumerable<string> imageFileNames,
         IEnumerable<string> extras,
         CancellationToken cancellationToken = default)
     {
-        var car = new Car { ImagePaths = imageFileNames.ToArray() };
+        var car = new Car
+        {
+            ImagePaths = imageFileNames.ToArray(),
+            Engine = engineType,
+            EngineSize = engineSize,
+            Transmission = transmission
+        };
 
         var brandResult = await _brands.GetAsync(new Expression<Func<Brand, bool>>[]
         {

@@ -10,6 +10,9 @@ public interface ICarsService
         string brandName,
         string? brandDescription,
         string modelName,
+        EngineType engineType,
+        Transmission transmission,
+        decimal? engineSize,
         IEnumerable<string> imageFileNames,
         IEnumerable<string> extras,
         CancellationToken cancellationToken = default);
