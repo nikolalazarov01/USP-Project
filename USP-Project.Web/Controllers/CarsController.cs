@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using USP_Project.Core.Contracts;
-using USP_Project.Web.Models;
 using USP_Project.Web.Models.Cars;
 
 namespace USP_Project.Web.Controllers;
@@ -96,6 +95,9 @@ public class CarsController : Controller
             carInputModel.BrandName,
             carInputModel.BrandDescription,
             carInputModel.ModelName,
+            carInputModel.EngineType,
+            carInputModel.Transmission,
+            carInputModel.EngineSize,
             imagesUploadResult.Data,
             carInputModel.Extras);
 
