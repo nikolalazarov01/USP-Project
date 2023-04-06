@@ -36,7 +36,10 @@ public class UspDbContext : IdentityDbContext<IdentityUser, IdentityRole, string
         builder.ApplyConfigurationsFromAssembly(typeof(UspDbContext).Assembly);
         base.OnModelCreating(builder);
         
-        builder.HasDbFunction(
+        builder
+            // Fuzzy Search functionality :)
+            .HasPostgresExtension("fuzzystrmatch")
+            .HasDbFunction(
                 typeof(UspDbContext).GetMethod(nameof(Levenshtein),
                 new []{ typeof(string), typeof(string) })!)
             .HasName("levenshtein");
