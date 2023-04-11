@@ -1,6 +1,9 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@using USP_Project.Data.Models.Enums;
+
+@{
+ViewData["Title"] = "Home Page";
 }
+
 <div class="row justify-content-start">
     <div class="col-md-3 filters-container">
         <h4>Filters</h4>
@@ -53,28 +56,42 @@
                 <input type="text" name="EngineSize" class="form-control" />
             </div>
             <div class="form-group">
-                <label>Engine Type:</label>
-                <div class="radio">
-                    <label><input type="radio" name="EngineType" value="Petrol">Petrol</label>
-                </div>
-                <div class="radio">
-                    <label><input type="radio" name="EngineType" value="Diesel">Diesel</label>
-                </div>
+                <label for="EngineType">Engine Type</label>
+                <select class="form-control" name="EngineType">
+                    @foreach (var type in Enum.GetValues(typeof(EngineType)))
+                    {
+                        <option>@type</option>
+                    }
+                </select>
             </div>
             <div class="form-group">
-                <label>Transmission:</label>
-                <div class="radio">
-                    <label><input type="radio" name="Transmission" value="Automatic">Automatic</label>
-                </div>
-                <div class="radio">
-                    <label><input type="radio" name="Transmission" value="Manual">Manual</label>
-                </div>
+                <label for="Transmission">Transmission</label>
+                <select class="form-control" name="Transmission">
+                    @foreach (var type in Enum.GetValues(typeof(Transmission)))
+                    {
+                        <option>@type</option>
+                    }
+                </select>
             </div>
             <button type="submit" class="button">Apply Filters</button>
         </form>
     </div>
     <div class="col-md-9">
-        <h4>All cars</h4>
-
+        <h4>Featured Cars</h4>
+        <div class="row">
+            @foreach (var car in ViewData["FeaturedCars"] as IEnumerable<USP_Project.Data.Models.Car>)
+            {
+                <div class="col-sm-6 col-md-4 col-lg-3">
+                    <div class="card">
+                        <img src="@car.ImagePaths" class="card-img-top" alt="@car.Brand.Name @car.Model.Name">
+                        <div class="card-body">
+                            <h5 class="card-title">@car.Brand.Name @car.Model.Name</h5>
+                            <p class="card-text">@car.Year</p>
+                            <a href="@Url.Action("Details", "Cars", new { id = car.Id })" class="btn btn-primary">Details</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
     </div>
 </div>
