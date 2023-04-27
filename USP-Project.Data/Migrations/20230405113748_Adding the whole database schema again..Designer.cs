@@ -12,8 +12,8 @@ using USP_Project.Data;
 namespace USP_Project.Data.Migrations
 {
     [DbContext(typeof(UspDbContext))]
-    [Migration("20230314135816_AddCarModels")]
-    partial class AddCarModels
+    [Migration("20230405113748_Adding the whole database schema again.")]
+    partial class Addingthewholedatabaseschemaagain
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -250,7 +250,7 @@ namespace USP_Project.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Brand");
+                    b.ToTable("Brands");
                 });
 
             modelBuilder.Entity("USP_Project.Data.Models.Car", b =>
@@ -262,6 +262,12 @@ namespace USP_Project.Data.Migrations
                     b.Property<Guid>("BrandId")
                         .HasColumnType("uuid");
 
+                    b.Property<string[]>("ImagePaths")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("text[]")
+                        .HasDefaultValue(new string[0]);
+
                     b.Property<Guid>("ModelId")
                         .HasColumnType("uuid");
 
@@ -271,7 +277,7 @@ namespace USP_Project.Data.Migrations
 
                     b.HasIndex("ModelId");
 
-                    b.ToTable("Car");
+                    b.ToTable("Cars");
                 });
 
             modelBuilder.Entity("USP_Project.Data.Models.CarsExtras", b =>
@@ -286,7 +292,7 @@ namespace USP_Project.Data.Migrations
 
                     b.HasIndex("ExtraId");
 
-                    b.ToTable("CarsExtras");
+                    b.ToTable("CarExtras");
                 });
 
             modelBuilder.Entity("USP_Project.Data.Models.Extra", b =>
@@ -301,7 +307,7 @@ namespace USP_Project.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Extra");
+                    b.ToTable("Extras");
                 });
 
             modelBuilder.Entity("USP_Project.Data.Models.Model", b =>
@@ -310,13 +316,18 @@ namespace USP_Project.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<Guid>("BrandId")
+                        .HasColumnType("uuid");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Model");
+                    b.HasIndex("BrandId");
+
+                    b.ToTable("Models");
                 });
 
             modelBuilder.Entity("CarExtra", b =>
@@ -423,9 +434,22 @@ namespace USP_Project.Data.Migrations
                     b.Navigation("Extra");
                 });
 
+            modelBuilder.Entity("USP_Project.Data.Models.Model", b =>
+                {
+                    b.HasOne("USP_Project.Data.Models.Brand", "Brand")
+                        .WithMany("Models")
+                        .HasForeignKey("BrandId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Brand");
+                });
+
             modelBuilder.Entity("USP_Project.Data.Models.Brand", b =>
                 {
                     b.Navigation("Cars");
+
+                    b.Navigation("Models");
                 });
 
             modelBuilder.Entity("USP_Project.Data.Models.Car", b =>

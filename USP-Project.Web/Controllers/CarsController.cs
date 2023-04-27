@@ -9,10 +9,13 @@ public class CarsController : Controller
     private readonly ICarsService _carsService;
     private readonly IFileService _fileService;
     private readonly IWebHostEnvironment _hostingEnv;
-    
+
     private const string ErrorsKey = "Errors";
 
-    public CarsController(ICarsService carsService, IFileService fileService, IWebHostEnvironment hostingEnv)
+    public CarsController(
+        ICarsService carsService,
+        IFileService fileService,
+        IWebHostEnvironment hostingEnv)
     {
         _carsService = carsService;
         _fileService = fileService;
@@ -23,6 +26,8 @@ public class CarsController : Controller
     [HttpGet]
     public async Task<IActionResult> Add()
     {
+        Thread.SpinWait(1_000);
+        
         var allBrands = await _carsService.AllBrands();
         var allModels = await _carsService.AllModels();
         
@@ -45,7 +50,7 @@ public class CarsController : Controller
     }
     
     [HttpGet]
-    [Route("search")]
+    [Route(nameof(Search))]
     public async Task<IActionResult> Search([FromForm] CarSearchInputModel searchInputModel)
     {
         if (!ModelState.IsValid)
@@ -66,7 +71,9 @@ public class CarsController : Controller
             searchInputModel.Transmission);
 
         // TODO: Add proper view models to be consumed by the client ...
-        return searchResult.IsSuccessfull ? Ok(searchResult.Data) : NotFound();
+        return searchResult.IsSuccessfull
+            ? Ok(searchResult.Data)
+            : NotFound();
     }
 
     [HttpPost]

@@ -22,8 +22,8 @@ public interface ICarsService
         string modelQuery,
         int productionYear,
         decimal? engineSize,
-        EngineType engineType,
-        Transmission transmission,
+        EngineType? engineType,
+        Transmission? transmission,
         CancellationToken cancellationToken = default);
     
     Task<OperationResult<IEnumerable<Model>>> AllModels(CancellationToken cancellationToken = default);
