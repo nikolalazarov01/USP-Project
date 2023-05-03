@@ -1,10 +1,9 @@
-﻿@model USP_Project.Web.Models.Cars.CreateCarInputModel
+﻿@using USP_Project.Data.Models.Enums;
+@model USP_Project.Web.Models.Cars.CreateCarInputModel
 
 @{
     ViewData["Title"] = "Add Car";
 }
-
-
 
 @if (ViewData["Errors"] != null)
 {
@@ -15,11 +14,12 @@
         }
     </div>
 }
+
 <div class="row">
     <div class="col-5">
         <h2>Add New Car</h2>
-        <hr/>
-        <form method="post">
+        <hr />
+        <form asp-controller="Cars" asp-action="Add" method="post" enctype="multipart/form-data">
             <div class="form-group">
                 <label for="BrandName">Brand Name</label>
                 <select asp-for="BrandName" class="form-control" id="BrandName">
@@ -32,7 +32,7 @@
             </div>
             <div class="form-group">
                 <label for="BrandDescription">Brand Description</label>
-                <input asp-for="BrandDescription" class="form-control" id="BrandDescription" value="@Model.BrandDescription"/>
+                <input asp-for="BrandDescription" class="form-control" id="BrandDescription" value="@Model.BrandDescription" />
                 <span asp-validation-for="BrandDescription" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -46,6 +46,31 @@
                 <span asp-validation-for="ModelName" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label for="EngineType">Engine Type</label>
+                <select class="form-control" id="EngineType" asp-for="EngineType">
+                    @foreach (var type in Enum.GetValues(typeof(EngineType)))
+                    {
+                        <option>@type</option>
+                    }
+                </select>
+                <span asp-validation-for="EngineType" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label for="Transmission">Transmission</label>
+                <select class="form-control" id="Transmission" asp-for="Transmission">
+                    @foreach (var type in Enum.GetValues(typeof(Transmission)))
+                    {
+                        <option>@type</option>
+                    }
+                </select>
+                <span asp-validation-for="Transmission" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label for="EngineSize">Engine Size</label>
+                <input type="number" step="0.01" asp-for="EngineSize" class="form-control" id="EngineSize" value="@Model.EngineSize" />
+                <span asp-validation-for="EngineSize" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label for="Extras">Extras</label>
                 <select class="form-control" id="Extras" asp-for="Extras" multiple>
                     <option value="Air Conditioning">Air Conditioning</option>
@@ -55,8 +80,8 @@
                 <span asp-validation-for="Extras" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label for="Image">Car Image</label>
-                <input multiple type="file" id="Image" asp-for="Images"/>
+                <label for="Images">Car Image</label>
+                <input multiple type="file" id="Images" asp-for="Images" />
             </div>
             <button type="submit" class="btn btn-primary" style="margin-top: 0.5rem;">Create</button>
         </form>
