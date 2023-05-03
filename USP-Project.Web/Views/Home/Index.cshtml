@@ -1,7 +1,7 @@
 ﻿@using USP_Project.Data.Models.Enums;
 
 @{
-ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Home Page";
 }
 
 <div class="row justify-content-start">
@@ -14,6 +14,7 @@ ViewData["Title"] = "Home Page";
                     <option value="">--All--</option>
                     @if (ViewData["Brands"] != null)
                     {
+                        // All brands.
                         @foreach (var brand in ViewData["Brands"] as IEnumerable<USP_Project.Data.Models.Brand>)
                         {
                             <option value="@brand.Id">@brand.Name</option>
@@ -27,6 +28,7 @@ ViewData["Title"] = "Home Page";
                     <option value="">--All--</option>
                     @if (ViewData["Models"] != null)
                     {
+                        // All models by brand. // GetModelsByBrand()
                         @foreach (var models in ViewData["Models"] as IEnumerable<USP_Project.Data.Models.Model>)
                         {
                             <option value="@models.Id">@models.Name</option>
@@ -38,6 +40,7 @@ ViewData["Title"] = "Home Page";
                 <label>Extras:</label><br />
                 @if (ViewData["Extras"] != null)
                 {
+                    // All extras
                     @foreach (var extra in ViewData["Extras"] as IEnumerable<USP_Project.Data.Models.Extra>)
                     {
                         <div class="checkbox">
@@ -52,12 +55,12 @@ ViewData["Title"] = "Home Page";
                 <p>Year: <span id="year"></span></p>
             </div>
             <div class="form-group">
-                <label>Engine Size:</label>
-                <input type="text" name="EngineSize" class="form-control" />
+                <label>Minimum Engine Size:</label>
+                <input type="number" name="EngineSize" class="form-control" />
             </div>
             <div class="form-group">
                 <label for="EngineType">Engine Type</label>
-                <select class="form-control" name="EngineType">
+                <select id="EngineType" class="form-control" name="EngineType">
                     @foreach (var type in Enum.GetValues(typeof(EngineType)))
                     {
                         <option>@type</option>
@@ -66,7 +69,7 @@ ViewData["Title"] = "Home Page";
             </div>
             <div class="form-group">
                 <label for="Transmission">Transmission</label>
-                <select class="form-control" name="Transmission">
+                <select id="Transmission" class="form-control" name="Transmission">
                     @foreach (var type in Enum.GetValues(typeof(Transmission)))
                     {
                         <option>@type</option>
@@ -95,3 +98,4 @@ ViewData["Title"] = "Home Page";
         </div>
     </div>
 </div>
+<script src="js/site.js" defer></script>
