@@ -6,7 +6,7 @@ namespace USP_Project.Data.Seeding;
 
 internal sealed class ModelSeeder : ISeeder
 {
-    public int Priority => 2;
+    public int Priority => 3;
     
     private readonly IServiceScopeFactory _scopeFactory;
 
@@ -19,8 +19,23 @@ internal sealed class ModelSeeder : ISeeder
         var context = scope.ServiceProvider.GetRequiredService<UspDbContext>();
 
         if(await context.Models.AnyAsync(cancellationToken)) return;
-        
-        var models = Array.Empty<Model>();
+
+        var brand = await context.Brands
+            .FirstOrDefaultAsync(b => b.Name == "BMW", cancellationToken: cancellationToken);
+
+        var models = new[]
+        {
+            new Model
+            {
+                Name = "E36",
+                Brand = brand
+            },
+            new Model
+            {
+                Name = "530d",
+                Brand = brand
+            },
+        };
         
         context.Models.AddRange(models);
         await context.SaveChangesAsync(cancellationToken);

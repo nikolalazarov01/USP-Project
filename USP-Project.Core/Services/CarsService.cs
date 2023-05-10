@@ -90,13 +90,15 @@ public class CarsService : ICarsService
             }, null!, default);
             var extraEntity = extraResult.Data;
             
-            if (!extraResult.IsSuccessfull)
+            if (!extraResult.IsSuccessfull || extraEntity is null)
             {
                 extraEntity = new Extra { Name = extra };
-                
                 await _extras.CreateAsync(extraEntity, cancellationToken);
             }
-            car.Extras.Add(extraEntity);
+            else
+            {
+                car.Extras.Add(extraEntity);
+            }
         }
 
         var operationResult = new OperationResult<Car>();
@@ -118,8 +120,8 @@ public class CarsService : ICarsService
         string modelQuery,
         int productionYear,
         decimal? engineSize,
-        EngineType engineType,
-        Transmission transmission,
+        EngineType? engineType,
+        Transmission? transmission,
         CancellationToken cancellationToken = default)
     {
         var query = _cars.FuzzySearch(
@@ -129,15 +131,11 @@ public class CarsService : ICarsService
                     (c => c.Model.Name, modelQuery)
                 });
 
-        if (engineSize is not null)
-        {
-            query = query.Where(c => c.EngineSize == engineSize);
-        }
-        
-        var searchResult = await query
-            .Where(c => c.Engine == engineType && c.Transmission == transmission)
-            .ToListAsync(cancellationToken);
+        if (engineSize is not null) query = query.Where(c => c.EngineSize == engineSize);
+        if (engineType is not null) query = query.Where(c => c.Engine == engineType);
+        if (transmission is not null) query = query.Where(c => c.Transmission == transmission);
 
+        var searchResult = await query.ToListAsync(cancellationToken);
         return new OperationResult<IEnumerable<Car>> { Data = searchResult };
     }
 

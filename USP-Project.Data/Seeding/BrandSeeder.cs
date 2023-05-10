@@ -6,7 +6,7 @@ namespace USP_Project.Data.Seeding;
 
 internal sealed class BrandSeeder : ISeeder
 {
-    public int Priority => 3;
+    public int Priority => 2;
     
     private readonly IServiceScopeFactory _scopeFactory;
 
@@ -19,8 +19,16 @@ internal sealed class BrandSeeder : ISeeder
         var context = scope.ServiceProvider.GetRequiredService<UspDbContext>();
 
         if(await context.Brands.AnyAsync(cancellationToken)) return;
-        
-        var brands = Array.Empty<Brand>();
+
+        var brands = new Brand[]
+        {
+            new()
+            {
+                Name = "BMW",
+                Description = "Cool German Sports Cars",
+                Id = Guid.NewGuid()
+            }
+        };
         
         context.Brands.AddRange(brands);
         await context.SaveChangesAsync(cancellationToken);

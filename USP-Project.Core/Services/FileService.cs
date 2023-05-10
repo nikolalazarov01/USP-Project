@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.StaticFiles;
 using USP_Project.Core.Contracts;
 using Usp_Project.Utils;
 
@@ -25,13 +26,16 @@ public class FileService : IFileService
 
         var fileUploadTasks = filesToUpload.Select(async f =>
         {
-            var fileName = $"{f.FileName}_{Guid.NewGuid().ToString()}";
-            var fullPath = Path.Combine(filePath, fileName);
+            var extension = Path.GetExtension(f.FileName);
+            var fileName = Path.GetFileNameWithoutExtension(f.FileName);
+            
+            var fullFileName = $"{fileName}_{Guid.NewGuid().ToString()}{extension}";
+            var fullPath = Path.Combine(filePath, fullFileName);
 
             await using var fileStream = File.Create(fullPath);
             await f.CopyToAsync(fileStream);
             return fullPath;
-        });
+        }).ToList();
 
         try
         {

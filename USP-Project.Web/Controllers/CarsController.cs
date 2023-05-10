@@ -26,8 +26,6 @@ public class CarsController : Controller
     [HttpGet]
     public async Task<IActionResult> Add()
     {
-        Thread.SpinWait(1_000);
-        
         var allBrands = await _carsService.AllBrands();
         var allModels = await _carsService.AllModels();
         
@@ -84,7 +82,8 @@ public class CarsController : Controller
             ViewData[ErrorsKey] = ModelState.SelectMany(x =>
                     x.Value?.Errors
                         .Select(e => e.ErrorMessage)
-                                 ?? Array.Empty<string>());
+                                 ?? Array.Empty<string>())
+                .ToList();
             return RedirectToAction(nameof(Add));
         }
         

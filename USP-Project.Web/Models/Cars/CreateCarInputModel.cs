@@ -10,7 +10,7 @@ public class CreateCarInputModel
     [MaxLength(50, ErrorMessage = "Brand name should not have more than 50 characters.")]
     public string BrandName { get; set; } = default!;
 
-    public ICollection<string> AllBrands { get; set; } = default!;
+    public ICollection<string> AllBrands { get; set; } = new List<string>();
     
     [MinLength(3, ErrorMessage = "Brand description must have at least 3 characters.")]
     [MaxLength(50, ErrorMessage = "Brand description should not have more than 50 characters.")]
@@ -29,7 +29,7 @@ public class CreateCarInputModel
     [Required]
     public decimal? EngineSize { get; set; }
     
-    public ICollection<string> AllModels { get; set; } = default!;
+    public ICollection<string> AllModels { get; set; } = new List<string>();
 
     public ICollection<string> Extras { get; set; } = new List<string>();
 

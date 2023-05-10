@@ -76,6 +76,7 @@ public class UspDbContext : IdentityDbContext<IdentityUser, IdentityRole, string
             .WithOne(c => c.Model);
 
         builder.Entity<CarsExtras>()
+            .ToTable("CarsExtras")
             .HasKey(ce => new { ce.CarId, ce.ExtraId });
             
         builder.Entity<CarsExtras>()

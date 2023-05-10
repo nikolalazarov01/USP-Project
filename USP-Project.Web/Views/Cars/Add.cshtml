@@ -3,14 +3,15 @@
 
 @{
     ViewData["Title"] = "Add Car";
+    var errors = ViewData["Errors"] as List<string>;
 }
 
-@if (ViewData["Errors"] != null)
+@if (errors != null)
 {
     <div class="alert alert-danger">
-        @foreach (var error in (IEnumerable<string>)ViewData["Errors"])
+        @foreach (var error in errors)
         {
-            <div>@error</div>
+            <div class="text-danger fw-bold">@error</div>
         }
     </div>
 }

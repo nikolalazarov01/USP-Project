@@ -2,6 +2,7 @@
 
 namespace USP_Project.Data.Models;
 
+[Table("CarsExtras")]
 public class CarsExtras
 {
     [ForeignKey(nameof(Car))]
