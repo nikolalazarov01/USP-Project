@@ -5,6 +5,10 @@ namespace USP_Project.Web.Models.Cars;
 
 public class CreateCarInputModel
 {
+    private const int MinYear = 1970;
+    
+    private const int MaxYear = 2023;
+    
     [Required]
     [MinLength(3, ErrorMessage = "Brand name must have at least 3 characters.")]
     [MaxLength(50, ErrorMessage = "Brand name should not have more than 50 characters.")]
@@ -28,6 +32,9 @@ public class CreateCarInputModel
 
     [Required]
     public decimal? EngineSize { get; set; }
+
+    [Range(MinYear, MaxYear, ErrorMessage = "The year must be between {1} and {2}!")]
+    public int? ProductionYear { get; set; }
     
     public ICollection<string> AllModels { get; set; } = new List<string>();
 

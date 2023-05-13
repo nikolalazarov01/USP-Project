@@ -1,88 +1,91 @@
 ﻿@using USP_Project.Data.Models.Enums;
+@using USP_Project.Data.Models
+@model USP_Project.Web.Models.Cars.CarSearchInputModel
 
 @{
     ViewData["Title"] = "Home Page";
+    var message = ViewData["Message"];
+    
+    ViewData["FeaturedCars"] = new List<Car>();
 }
 
 <div class="row justify-content-start">
     <div class="col-md-3 filters-container">
+        @if (message is not null)
+        {
+            <div class="my-2 alert alert-success" role="alert">@message</div>
+        }
         <h4>Filters</h4>
         <form asp-action="Index" method="get">
-            <div class="form-group">
+            <div class="form-group mt-2">
                 <label>Brand:</label>
-                <select class="form-control" name="BrandId">
+                <select id="Brand" class="form-control" name="BrandId">
                     <option value="">--All--</option>
-                    @if (ViewData["Brands"] != null)
+                    @if (Model.AllBrands?.Any() ?? false)
                     {
                         // All brands.
-                        @foreach (var brand in ViewData["Brands"] as IEnumerable<USP_Project.Data.Models.Brand>)
+                        @foreach (var brand in Model.AllBrands)
                         {
                             <option value="@brand.Id">@brand.Name</option>
                         }
                     }
                 </select>
             </div>
-            <div class="form-group">
-                <label>Model:</label>
-                <select class="form-control" name="ModelId">
-                    <option value="">--All--</option>
-                    @if (ViewData["Models"] != null)
-                    {
-                        // All models by brand. // GetModelsByBrand()
-                        @foreach (var models in ViewData["Models"] as IEnumerable<USP_Project.Data.Models.Model>)
-                        {
-                            <option value="@models.Id">@models.Name</option>
-                        }
-                    }
+            <div class="form-group mt-2">
+                <label asp-for="Model">Model:</label>
+                <select asp-for="Model" id="Model" class="form-control" name="ModelId">
+                    <option disabled="disabled" value="">--All--</option>
                 </select>
             </div>
-            <div class="form-group">
-                <label>Extras:</label><br />
-                @if (ViewData["Extras"] != null)
+            <div class="form-group mt-2">
+                <label>Extras:</label><br/>
+                @if (Model.AllExtras?.Any() ?? false)
                 {
                     // All extras
-                    @foreach (var extra in ViewData["Extras"] as IEnumerable<USP_Project.Data.Models.Extra>)
+                    @foreach (var extra in Model.AllExtras)
                     {
                         <div class="checkbox">
-                            <label><input type="checkbox" name="Extras" value="@extra.Id">@extra.Name</label>
+                            <label>
+                                <input type="checkbox" name="Extras" value="@extra.Id">@extra.Name
+                            </label>
                         </div>
                     }
                 }
             </div>
-            <div class="form-group">
+            <div class="form-group mt-2">
                 <label>Year of Production:</label>
-                <input type="range" min="1970" max="2023" value="2010" class="slider" id="Year" name="Year">
+                <input asp-for="YearOfProduction" type="range" min="1970" max="2023" value="2010" class="slider" id="Year" name="Year">
                 <p>Year: <span id="year"></span></p>
             </div>
-            <div class="form-group">
+            <div class="form-group mt-2">
                 <label>Minimum Engine Size:</label>
-                <input type="number" name="EngineSize" class="form-control" />
+                <input asp-for="MinEngineSize" type="number" name="EngineSize" class="form-control"/>
             </div>
-            <div class="form-group">
+            <div class="form-group mt-2">
                 <label for="EngineType">Engine Type</label>
-                <select id="EngineType" class="form-control" name="EngineType">
+                <select asp-for="EngineType" id="EngineType" class="form-control" name="EngineType">
                     @foreach (var type in Enum.GetValues(typeof(EngineType)))
                     {
-                        <option>@type</option>
+                        <option value="@type">@type</option>
                     }
                 </select>
             </div>
-            <div class="form-group">
+            <div class="form-group mt-2">
                 <label for="Transmission">Transmission</label>
-                <select id="Transmission" class="form-control" name="Transmission">
+                <select asp-for="Transmission" id="Transmission" class="form-control" name="Transmission">
                     @foreach (var type in Enum.GetValues(typeof(Transmission)))
                     {
-                        <option>@type</option>
+                        <option value="@type">@type</option>
                     }
                 </select>
             </div>
-            <button type="submit" class="button">Apply Filters</button>
+            <button type="submit" class="button mt-2 btn btn-primary">Apply Filters</button>
         </form>
     </div>
     <div class="col-md-9">
         <h4>Featured Cars</h4>
         <div class="row">
-            @foreach (var car in ViewData["FeaturedCars"] as IEnumerable<USP_Project.Data.Models.Car>)
+            @foreach (var car in ViewData["FeaturedCars"] as List<Car>)
             {
                 <div class="col-sm-6 col-md-4 col-lg-3">
                     <div class="card">

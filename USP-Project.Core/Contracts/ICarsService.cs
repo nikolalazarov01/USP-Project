@@ -10,6 +10,7 @@ public interface ICarsService
         string brandName,
         string? brandDescription,
         string modelName,
+        int? productionYear,
         EngineType engineType,
         Transmission transmission,
         decimal? engineSize,
@@ -20,7 +21,7 @@ public interface ICarsService
     Task<OperationResult<IEnumerable<Car>>> SearchAsync(
         string brandQuery,
         string modelQuery,
-        int productionYear,
+        int? productionYear,
         decimal? engineSize,
         EngineType? engineType,
         Transmission? transmission,
@@ -29,6 +30,8 @@ public interface ICarsService
     Task<OperationResult<IEnumerable<Model>>> AllModels(CancellationToken cancellationToken = default);
     
     Task<OperationResult<IEnumerable<Brand>>> AllBrands(CancellationToken cancellationToken = default);
+    
+    Task<OperationResult<IEnumerable<Extra>>> AllExtras(CancellationToken cancellationToken = default);
     
     Task<OperationResult<IEnumerable<Model>>> ModelsByBrand(Guid brandId, CancellationToken cancellationToken = default);
 }

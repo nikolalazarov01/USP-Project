@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+using System.Runtime.InteropServices;
 using Microsoft.EntityFrameworkCore;
 using USP_Project.Core.Contracts;
 using USP_Project.Data.Models;
@@ -31,6 +32,7 @@ public class CarsService : ICarsService
         string brandName,
         string? brandDescription,
         string modelName,
+        int? productionYear,
         EngineType engineType,
         Transmission transmission,
         decimal? engineSize,
@@ -42,6 +44,7 @@ public class CarsService : ICarsService
         {
             ImagePaths = imageFileNames.ToArray(),
             Engine = engineType,
+            ProductionYear = productionYear,
             EngineSize = engineSize,
             Transmission = transmission
         };
@@ -81,7 +84,6 @@ public class CarsService : ICarsService
         }
         car.Model = model;
 
-        car.Extras ??= new List<Extra>();
         foreach (var extra in extras)
         {
             var extraResult = await _extras.GetAsync(new Expression<Func<Extra, bool>>[]
@@ -95,10 +97,13 @@ public class CarsService : ICarsService
                 extraEntity = new Extra { Name = extra };
                 await _extras.CreateAsync(extraEntity, cancellationToken);
             }
-            else
+
+            var carExtra = new CarsExtras
             {
-                car.Extras.Add(extraEntity);
-            }
+                Car = car,
+                Extra = extraEntity
+            };
+            car.CarsExtras.Add(carExtra);
         }
 
         var operationResult = new OperationResult<Car>();
@@ -118,7 +123,7 @@ public class CarsService : ICarsService
     public async Task<OperationResult<IEnumerable<Car>>> SearchAsync(
         string brandQuery,
         string modelQuery,
-        int productionYear,
+        int? productionYear,
         decimal? engineSize,
         EngineType? engineType,
         Transmission? transmission,
@@ -134,7 +139,8 @@ public class CarsService : ICarsService
         if (engineSize is not null) query = query.Where(c => c.EngineSize == engineSize);
         if (engineType is not null) query = query.Where(c => c.Engine == engineType);
         if (transmission is not null) query = query.Where(c => c.Transmission == transmission);
-
+        if (productionYear is not null) query = query.Where(c => c.ProductionYear == productionYear);
+            
         var searchResult = await query.ToListAsync(cancellationToken);
         return new OperationResult<IEnumerable<Car>> { Data = searchResult };
     }
@@ -148,6 +154,12 @@ public class CarsService : ICarsService
     public async Task<OperationResult<IEnumerable<Brand>>> AllBrands(CancellationToken cancellationToken = default)
     {
         var result = await _brands.GetManyAsync(default!, default!, cancellationToken);
+        return result;
+    }
+
+    public async Task<OperationResult<IEnumerable<Extra>>> AllExtras(CancellationToken cancellationToken = default)
+    {
+        var result = await _extras.GetManyAsync(default!, default!, cancellationToken);
         return result;
     }
 
