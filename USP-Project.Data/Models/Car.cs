@@ -22,15 +22,17 @@ public class Car : IEntity
     
     public Model Model { get; set; }
 
-    public ICollection<Extra>? Extras { get; set; }
-    
-    public List<CarsExtras> CarsExtras { get; set; }
+    public ICollection<Extra> Extras { get; set; } = new List<Extra>();
+
+    public List<CarsExtras> CarsExtras { get; set; } = new();
     
     public EngineType Engine { get; set; }
     
     public Transmission Transmission { get; set; }
     
     public decimal? EngineSize { get; set; }
+
+    public int? ProductionYear { get; set; }
 
     public string[] ImagePaths { get; set; }
 }

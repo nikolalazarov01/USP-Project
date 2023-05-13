@@ -280,6 +280,9 @@ namespace USP_Project.Data.Migrations
                     b.Property<Guid>("ModelId")
                         .HasColumnType("uuid");
 
+                    b.Property<int?>("ProductionYear")
+                        .HasColumnType("integer");
+
                     b.Property<Transmission>("Transmission")
                         .HasColumnType("transmission");
 

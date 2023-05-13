@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using USP_Project.Core.Contracts;
 using USP_Project.Web.Models.Cars;
+using USP_Project.Web.Models.Models;
 
 namespace USP_Project.Web.Controllers;
 
@@ -44,7 +45,13 @@ public class CarsController : Controller
     {
         var result = await _carsService.ModelsByBrand(
             Guid.Parse(brandId));
-        return result.IsSuccessfull ? Ok(result.Data) : NotFound();
+        return result.IsSuccessfull
+            ? Ok(result.Data.Select(m => new ModelViewModel
+            {
+                Id = m.Id.ToString(),
+                Name = m.Name
+            }))
+            : NotFound();
     }
     
     [HttpGet]
@@ -64,7 +71,7 @@ public class CarsController : Controller
             searchInputModel.Brand ?? string.Empty,
             searchInputModel.Model ?? string.Empty,
             searchInputModel.YearOfProduction,
-            searchInputModel.EngineSize,
+            searchInputModel.MinEngineSize,
             searchInputModel.EngineType,
             searchInputModel.Transmission);
 
@@ -101,6 +108,7 @@ public class CarsController : Controller
             carInputModel.BrandName,
             carInputModel.BrandDescription,
             carInputModel.ModelName,
+            carInputModel.ProductionYear,
             carInputModel.EngineType,
             carInputModel.Transmission,
             carInputModel.EngineSize,
@@ -115,6 +123,8 @@ public class CarsController : Controller
 
         
         // TODO: Potentially add a Success message to the View Data ...
+        var car = result.Data;
+        ViewData["Message"] = $"Car {car.Brand.Name} {car.Model.Name} was successfully added!";
         return RedirectToAction(nameof(HomeController.Index), "Home");
     }
 }

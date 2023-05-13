@@ -47,6 +47,11 @@
                 <span asp-validation-for="ModelName" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label for="ProductionYear">Production Year</label>
+                <input type="number" class="form-control" id="ProductionYear" asp-for="ProductionYear" />
+                <span asp-validation-for="ProductionYear" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label for="EngineType">Engine Type</label>
                 <select class="form-control" id="EngineType" asp-for="EngineType">
                     @foreach (var type in Enum.GetValues(typeof(EngineType)))
