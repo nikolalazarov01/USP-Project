@@ -27,19 +27,19 @@ namespace USP_Project.Data.Migrations
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "transmission", new[] { "automatic", "manual" });
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("CarExtra", b =>
+            modelBuilder.Entity("CarsExtras", b =>
                 {
-                    b.Property<Guid>("CarsId")
+                    b.Property<Guid>("CarId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("ExtrasId")
+                    b.Property<Guid>("ExtraId")
                         .HasColumnType("uuid");
 
-                    b.HasKey("CarsId", "ExtrasId");
+                    b.HasKey("CarId", "ExtraId");
 
-                    b.HasIndex("ExtrasId");
+                    b.HasIndex("ExtraId");
 
-                    b.ToTable("CarExtra");
+                    b.ToTable("CarsExtras");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -305,7 +305,7 @@ namespace USP_Project.Data.Migrations
 
                     b.HasIndex("ExtraId");
 
-                    b.ToTable("CarExtras");
+                    b.ToTable("CarsExtras");
                 });
 
             modelBuilder.Entity("USP_Project.Data.Models.Extra", b =>
@@ -343,20 +343,20 @@ namespace USP_Project.Data.Migrations
                     b.ToTable("Models");
                 });
 
-            modelBuilder.Entity("CarExtra", b =>
-                {
-                    b.HasOne("USP_Project.Data.Models.Car", null)
-                        .WithMany()
-                        .HasForeignKey("CarsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("USP_Project.Data.Models.Extra", null)
-                        .WithMany()
-                        .HasForeignKey("ExtrasId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
+            // modelBuilder.Entity("CarExtra", b =>
+            //     {
+            //         b.HasOne("USP_Project.Data.Models.Car", null)
+            //             .WithMany()
+            //             .HasForeignKey("CarsId")
+            //             .OnDelete(DeleteBehavior.Cascade)
+            //             .IsRequired();
+            //
+            //         b.HasOne("USP_Project.Data.Models.Extra", null)
+            //             .WithMany()
+            //             .HasForeignKey("ExtrasId")
+            //             .OnDelete(DeleteBehavior.Cascade)
+            //             .IsRequired();
+            //     });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
