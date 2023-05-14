@@ -129,37 +129,39 @@ public class CarsService : ICarsService
         Transmission? transmission,
         CancellationToken cancellationToken = default)
     {
-        var query = _cars.FuzzySearch(
-                new (Expression<Func<Car, string>>, string)[]
-                {
-                    (c => c.Brand.Name, brandQuery),
-                    (c => c.Model.Name, modelQuery)
-                });
-
-        if (engineSize is not null) query = query.Where(c => c.EngineSize == engineSize);
-        if (engineType is not null) query = query.Where(c => c.Engine == engineType);
-        if (transmission is not null) query = query.Where(c => c.Transmission == transmission);
-        if (productionYear is not null) query = query.Where(c => c.ProductionYear == productionYear);
+        var filters = new List<Expression<Func<Car, bool>>>();
+        
+        if(!string.IsNullOrEmpty(brandQuery)) filters.Add(c => c.Brand.Name == brandQuery);
+        if(!string.IsNullOrEmpty(modelQuery)) filters.Add(c => c.Model.Name == modelQuery);
+        
+        if(engineSize is not null) filters.Add(c => c.EngineSize == engineSize);
+        if (engineType is not null) filters.Add(c => c.Engine == engineType);
+        if (transmission is not null) filters.Add(c => c.Transmission == transmission);
+        if (productionYear is not null) filters.Add(c => c.ProductionYear == productionYear);
             
-        var searchResult = await query.ToListAsync(cancellationToken);
-        return new OperationResult<IEnumerable<Car>> { Data = searchResult };
+        var searchResult  = await _cars.GetManyAsync(
+            filters,
+            new Expression<Func<Car, object>>[] { c => c.Brand, c => c.Model },
+            default!, cancellationToken);
+        
+        return new OperationResult<IEnumerable<Car>> { Data = searchResult.Data };
     }
 
     public async Task<OperationResult<IEnumerable<Model>>> AllModels(CancellationToken cancellationToken = default)
     {
-        var result = await _models.GetManyAsync(default!, default!, cancellationToken);
+        var result = await _models.GetManyAsync(default!, default!, default!, cancellationToken);
         return result;
     }
 
     public async Task<OperationResult<IEnumerable<Brand>>> AllBrands(CancellationToken cancellationToken = default)
     {
-        var result = await _brands.GetManyAsync(default!, default!, cancellationToken);
+        var result = await _brands.GetManyAsync(default!, default!, default!, cancellationToken);
         return result;
     }
 
     public async Task<OperationResult<IEnumerable<Extra>>> AllExtras(CancellationToken cancellationToken = default)
     {
-        var result = await _extras.GetManyAsync(default!, default!, cancellationToken);
+        var result = await _extras.GetManyAsync(default!, default!, default!, cancellationToken);
         return result;
     }
 
@@ -168,10 +170,14 @@ public class CarsService : ICarsService
         CancellationToken cancellationToken = default)
     {
         var models = await _models
-            .GetManyAsync(new Expression<Func<Model, bool>>[]
-            {
-                m => m.BrandId == brandId
-            }, default!, cancellationToken);
+            .GetManyAsync(
+                new Expression<Func<Model, bool>>[]
+                {
+                    m => m.BrandId == brandId
+                },
+                new Expression<Func<Model, object>>[]{ m => m.Brand },
+                default!,
+                cancellationToken);
 
         return models;
     }

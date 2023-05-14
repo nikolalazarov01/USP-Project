@@ -19,10 +19,28 @@ internal sealed class ExtrasSeeder : ISeeder
         var context = scope.ServiceProvider.GetRequiredService<UspDbContext>();
 
         if(await context.Extras.AnyAsync(cancellationToken)) return;
-        
-        var extras = Array.Empty<Extra>();
+
+        var extras = GetExtras();
         
         context.Extras.AddRange(extras);
         await context.SaveChangesAsync(cancellationToken);
     }
+
+    private static IEnumerable<Extra> GetExtras()
+        => new[]
+        {
+            "Navigation system",
+            "Heated seats",
+            "Advanced safety features",
+            "Premium sound system",
+            "Sunroof / moonroof",
+            "Navigation system",
+            "Air conditioning",
+            "Keyless entry",
+            "Built-in Wi-Fi",
+            "Adaptive Cruise Control",
+            "Rearview Camera",
+        }
+            .Select(s => new Extra { Id = Guid.NewGuid(), Name = s })
+            .ToList();
 }

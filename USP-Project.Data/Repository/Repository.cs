@@ -70,13 +70,24 @@ public class Repository<T> : IRepository<T> where T : class, IEntity
         return operationResult;
     }
 
-    public async Task<OperationResult<IEnumerable<T>>> GetManyAsync(IEnumerable<Expression<Func<T, bool>>> filters, IEnumerable<Func<IQueryable<T>, IQueryable<T>>> transformations, CancellationToken token)
+    public async Task<OperationResult<IEnumerable<T>>> GetManyAsync(
+        IEnumerable<Expression<Func<T, bool>>> filters,
+        IEnumerable<Expression<Func<T, object>>> includes,
+        IEnumerable<Func<IQueryable<T>, IQueryable<T>>> transformations,
+        CancellationToken token)
     {
         var operationResult = new OperationResult<IEnumerable<T>>();
 
         try
         {
-            var result = await this._db.Set<T>().Filter(filters).Transform(transformations).ToListAsync(token);
+            var queryable = _db.Set<T>().AsQueryable();
+            queryable = includes?.Aggregate(queryable, (current, include) => current.Include(include))
+                        ?? queryable;
+            
+            var result = await queryable
+                .Filter(filters)
+                .Transform(transformations)
+                .ToListAsync(token);
             operationResult.Data = result;
         }
         catch (Exception ex)

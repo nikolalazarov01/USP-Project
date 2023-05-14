@@ -20,17 +20,56 @@ internal sealed class BrandSeeder : ISeeder
 
         if(await context.Brands.AnyAsync(cancellationToken)) return;
 
-        var brands = new Brand[]
+        var brands = GetBrands().ToList();
+        
+        context.Brands.AddRange(brands);
+        await context.SaveChangesAsync(cancellationToken);
+    }
+
+    private static IEnumerable<Brand> GetBrands()
+        => new Brand[]
         {
             new()
             {
                 Name = "BMW",
                 Description = "Cool German Sports Cars",
                 Id = Guid.NewGuid()
-            }
+            },
+            new()
+            {
+                Name = "Audi",
+                Description = "Cool German Sports Cars #2",
+                Id = Guid.NewGuid()
+            },
+            new()
+            {
+                Name = "Toyota",
+                Description = "Cool Japanese Sports Cars",
+                Id = Guid.NewGuid()
+            },
+            new()
+            {
+                Name = "Honda",
+                Description = "Cool Japanese Sports Cars #2",
+                Id = Guid.NewGuid()
+            },
+            new()
+            {
+                Name = "Ferrari",
+                Description = "Cool Italian Sports Cars",
+                Id = Guid.NewGuid()
+            },
+            new()
+            {
+                Name = "Lamborghini",
+                Description = "Cool Italian Sports Cars #2",
+                Id = Guid.NewGuid()
+            },
+            new()
+            {
+                Name = "Aston Martin",
+                Description = "Cool British Sports Cars",
+                Id = Guid.NewGuid()
+            },
         };
-        
-        context.Brands.AddRange(brands);
-        await context.SaveChangesAsync(cancellationToken);
-    }
 }

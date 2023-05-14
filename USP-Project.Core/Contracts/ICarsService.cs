@@ -21,10 +21,10 @@ public interface ICarsService
     Task<OperationResult<IEnumerable<Car>>> SearchAsync(
         string brandQuery,
         string modelQuery,
-        int? productionYear,
-        decimal? engineSize,
-        EngineType? engineType,
-        Transmission? transmission,
+        int? productionYear = default,
+        decimal? engineSize = default,
+        EngineType? engineType = default,
+        Transmission? transmission = default,
         CancellationToken cancellationToken = default);
     
     Task<OperationResult<IEnumerable<Model>>> AllModels(CancellationToken cancellationToken = default);

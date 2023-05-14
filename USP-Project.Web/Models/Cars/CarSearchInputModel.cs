@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections;
+using System.ComponentModel.DataAnnotations;
 using USP_Project.Data.Models;
 using USP_Project.Data.Models.Enums;
 using USP_Project.Web.Models.Brands;
@@ -23,6 +24,8 @@ public class CarSearchInputModel
     
     [Range(MinYear, MaxYear, ErrorMessage = "The year must be between {1} and {2}!")]
     public int YearOfProduction { get; set; }
+
+    public ICollection<string> Extras { get; set; } = new List<string>();
     
     public decimal? MinEngineSize { get; set; }
     

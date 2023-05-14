@@ -40,18 +40,19 @@ public class CarsController : Controller
     }
 
     [HttpGet]
-    [Route("models")]
-    public async Task<IActionResult> AllModelsByBrand([FromQuery] string brandId)
+    public async Task<IActionResult> Models([FromQuery] Guid brandId)
     {
-        var result = await _carsService.ModelsByBrand(
-            Guid.Parse(brandId));
-        return result.IsSuccessfull
-            ? Ok(result.Data.Select(m => new ModelViewModel
+        var result = await _carsService.ModelsByBrand(brandId);
+        if (!result.IsSuccessfull) return NotFound();
+
+        var models = result
+            .Data
+            .Select(m => new ModelViewModel
             {
                 Id = m.Id.ToString(),
                 Name = m.Name
-            }))
-            : NotFound();
+            });
+        return Ok(models);
     }
     
     [HttpGet]
@@ -76,6 +77,8 @@ public class CarsController : Controller
             searchInputModel.Transmission);
 
         // TODO: Add proper view models to be consumed by the client ...
+        searchInputModel.FeaturedCars = searchResult.Data.ToList();
+        
         return searchResult.IsSuccessfull
             ? Ok(searchResult.Data)
             : NotFound();
@@ -112,7 +115,7 @@ public class CarsController : Controller
             carInputModel.EngineType,
             carInputModel.Transmission,
             carInputModel.EngineSize,
-            imagesUploadResult.Data,
+            imagesUploadResult.Data.Select(f => f.Replace(_hostingEnv.WebRootPath, string.Empty)),
             carInputModel.Extras);
 
         if (!result.IsSuccessfull)

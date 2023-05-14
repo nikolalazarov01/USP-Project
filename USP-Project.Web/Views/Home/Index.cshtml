@@ -1,12 +1,10 @@
 ﻿@using USP_Project.Data.Models.Enums;
-@using USP_Project.Data.Models
 @model USP_Project.Web.Models.Cars.CarSearchInputModel
 
 @{
     ViewData["Title"] = "Home Page";
     var message = ViewData["Message"];
-    
-    ViewData["FeaturedCars"] = new List<Car>();
+    var errors = ViewData["Errors"] as ICollection<string>;
 }
 
 <div class="row justify-content-start">
@@ -15,11 +13,15 @@
         {
             <div class="my-2 alert alert-success" role="alert">@message</div>
         }
+        @if (errors is not null)
+        {
+            <div class="my-2 alert alert-warning" role="alert">@string.Join(", ", errors)</div>
+        }
         <h4>Filters</h4>
-        <form asp-action="Index" method="get">
+        <form asp-controller="Home" asp-action="Index" method="post">
             <div class="form-group mt-2">
                 <label>Brand:</label>
-                <select id="Brand" class="form-control" name="BrandId">
+                <select asp-for="Brand" id="Brand" class="form-control">
                     <option value="">--All--</option>
                     @if (Model.AllBrands?.Any() ?? false)
                     {
@@ -33,7 +35,7 @@
             </div>
             <div class="form-group mt-2">
                 <label asp-for="Model">Model:</label>
-                <select asp-for="Model" id="Model" class="form-control" name="ModelId">
+                <select asp-for="Model" id="Model" class="form-control">
                     <option disabled="disabled" value="">--All--</option>
                 </select>
             </div>
@@ -45,25 +47,24 @@
                     @foreach (var extra in Model.AllExtras)
                     {
                         <div class="checkbox">
-                            <label>
-                                <input type="checkbox" name="Extras" value="@extra.Id">@extra.Name
-                            </label>
+                            <label for="@extra.Id">@extra.Name</label>
+                            <input id="@extra.Id" type="checkbox" name="Extras" value="@extra.Name">
                         </div>
                     }
                 }
             </div>
             <div class="form-group mt-2">
                 <label>Year of Production:</label>
-                <input asp-for="YearOfProduction" type="range" min="1970" max="2023" value="2010" class="slider" id="Year" name="Year">
+                <input asp-for="YearOfProduction" type="range" min="1970" max="2023" value="2010" class="slider">
                 <p>Year: <span id="year"></span></p>
             </div>
             <div class="form-group mt-2">
                 <label>Minimum Engine Size:</label>
-                <input asp-for="MinEngineSize" type="number" name="EngineSize" class="form-control"/>
+                <input asp-for="MinEngineSize" type="number" class="form-control"/>
             </div>
             <div class="form-group mt-2">
                 <label for="EngineType">Engine Type</label>
-                <select asp-for="EngineType" id="EngineType" class="form-control" name="EngineType">
+                <select asp-for="EngineType" id="EngineType" class="form-control">
                     @foreach (var type in Enum.GetValues(typeof(EngineType)))
                     {
                         <option value="@type">@type</option>
@@ -72,27 +73,30 @@
             </div>
             <div class="form-group mt-2">
                 <label for="Transmission">Transmission</label>
-                <select asp-for="Transmission" id="Transmission" class="form-control" name="Transmission">
+                <select asp-for="Transmission" id="Transmission" class="form-control" >
                     @foreach (var type in Enum.GetValues(typeof(Transmission)))
                     {
                         <option value="@type">@type</option>
                     }
                 </select>
             </div>
-            <button type="submit" class="button mt-2 btn btn-primary">Apply Filters</button>
+            <button type="submit" class="button mt-4 btn btn-primary">Apply Filters</button>
         </form>
     </div>
     <div class="col-md-9">
         <h4>Featured Cars</h4>
-        <div class="row">
-            @foreach (var car in ViewData["FeaturedCars"] as List<Car>)
+        <div class="row mt-4">
+            @foreach (var car in Model.FeaturedCars)
             {
                 <div class="col-sm-6 col-md-4 col-lg-3">
-                    <div class="card">
-                        <img src="@car.ImagePaths" class="card-img-top" alt="@car.Brand.Name @car.Model.Name">
+                    <div class="card p-2 rounded-2">
+                        @foreach (var imagePath in car.ImagePaths)
+                        {
+                            <img src="@imagePath" class="card-img-top" alt="@car.Brand.Name @car.Model.Name">
+                        }
                         <div class="card-body">
                             <h5 class="card-title">@car.Brand.Name @car.Model.Name</h5>
-                            @* <p class="card-text">@car.Year</p> *@
+                            <p class="card-text"> Year of production: @car.ProductionYear</p>
                             @* <a href="@Url.Action("Details", "Cars", new { id = car.Id })" class="btn btn-primary">Details</a> *@
                         </div>
                     </div>
