@@ -73,10 +73,10 @@ public class HomeController : Controller
             searchInputModel.FeaturedCars = searchResult.Data.ToList();
         }
         
-        var brandsAndExtras = await GetAllBrandsAndExtras();
+        var (brands, extras) = await GetAllBrandsAndExtras();
         
-        searchInputModel.AllBrands = brandsAndExtras.brands;
-        searchInputModel.AllExtras = brandsAndExtras.extras;
+        searchInputModel.AllBrands = brands;
+        searchInputModel.AllExtras = extras;
         
         return View("Index", searchInputModel);
     }

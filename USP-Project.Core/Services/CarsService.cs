@@ -130,11 +130,20 @@ public class CarsService : ICarsService
         CancellationToken cancellationToken = default)
     {
         var filters = new List<Expression<Func<Car, bool>>>();
+
+        if (!string.IsNullOrEmpty(brandQuery))
+        {
+            var brandId = Guid.Parse(brandQuery);
+            filters.Add(c => c.Brand.Id == brandId);
+        }
+
+        if (!string.IsNullOrEmpty(modelQuery))
+        {
+            var modelId = Guid.Parse(modelQuery);
+            filters.Add(c => c.Model.Id == modelId);
+        }
         
-        if(!string.IsNullOrEmpty(brandQuery)) filters.Add(c => c.Brand.Name == brandQuery);
-        if(!string.IsNullOrEmpty(modelQuery)) filters.Add(c => c.Model.Name == modelQuery);
-        
-        if(engineSize is not null) filters.Add(c => c.EngineSize == engineSize);
+        if(engineSize is not null) filters.Add(c => c.EngineSize >= engineSize);
         if (engineType is not null) filters.Add(c => c.Engine == engineType);
         if (transmission is not null) filters.Add(c => c.Transmission == transmission);
         if (productionYear is not null) filters.Add(c => c.ProductionYear == productionYear);
